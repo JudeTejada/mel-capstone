@@ -1,5 +1,4 @@
-import { Status } from "@prisma/client";
-import { AvatarImage } from "@radix-ui/react-avatar";
+import type { Status } from "@prisma/client";
 import { format } from "date-fns";
 import { Fragment } from "react";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
@@ -12,9 +11,10 @@ import {
 } from "~/components/ui/card";
 import { api } from "~/trpc/server";
 
-const statusLabels: Record<Exclude<Status, "COMPLETED">, string> = {
+const statusLabels: Record<Status, string> = {
   INPROGRESS: "In progress",
   TODO: "To do",
+  COMPLETED: "Completed",
 };
 
 export async function RecentTasks() {
