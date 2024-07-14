@@ -102,13 +102,11 @@ export function DataTableRowActions<TData>({
       </DropdownMenu>
       {isModalOpen && (
         <EditTaskModal
-          // @ts-expect-error  data is expected
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           taskData={{
             id: task.id,
             userId: task.assignedId,
             deadline: task.deadline.toString(),
-            description: task.description!,
+            description: task.description,
             priority: task.priority,
             status: task.status,
             title: task.title,
