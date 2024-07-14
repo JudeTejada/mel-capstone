@@ -88,14 +88,18 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.email = user.email;
+        // @ts-expect-error it is expected
         token.firstName = user.firstName; // Include firstName
+        // @ts-expect-error it is expected
         token.lastName = user.lastName; // Include lastName
         token.image = user.image; // Include other necessary fields
+        // @ts-expect-error it is expected
         token.role = user.role; // Include other necessary fields
       }
       return Promise.resolve(token);
     },
     session: async ({ token, session }) => {
+      // @ts-expect-error it is expected
       session.user = token;
       return Promise.resolve(session);
     },
