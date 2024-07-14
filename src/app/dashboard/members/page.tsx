@@ -5,18 +5,11 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { columns } from "./components/columnts";
 
-import { DataTable } from "./components/data-table";
 import { api } from "~/trpc/server";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
-import { ChevronDownIcon } from "lucide-react";
-import { Button } from "~/components/ui/button";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+
+import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Tasks",
   description: "A task and issue tracker build using Tanstack Table.",

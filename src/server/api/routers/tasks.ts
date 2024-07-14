@@ -252,4 +252,10 @@ export const tasksRouter = createTRPCRouter({
 export type GetAllCommentsByTaskIDReturnType = Awaited<
   ReturnType<typeof tasksRouter.getAllCommentsByTaskID>
 >;
+export type GetTaskByIdReturnType = Awaited<
+  ReturnType<typeof tasksRouter.getTaskById>
+>;
+
+
+
 type test = GetAllCommentsByTaskIDReturnType["data"];

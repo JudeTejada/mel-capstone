@@ -36,9 +36,61 @@ export default async function Page({ params }: Props) {
 
   return (
     <div>
-      <div className="grid w-full grid-cols-4">
+      <div className="grid w-full grid-cols-1 md:grid-cols-4">
         <div className="col-span-3 bg-white">
-          <Link href={"/dashboard/tasks"}>
+          <Link href={"/dashboard/tasks"} className="flex md:hidden">
+            <Button variant="link" className="p-0 text-gray-500">
+              <ArrowLeft size={20} className="mr-1" />
+              Go back
+            </Button>
+          </Link>
+
+          <div className="mb-6 grid grid-cols-2 gap-y-4 md:hidden">
+            <SidebarItem
+              title={"Date started"}
+              description={format(new Date(createdAt), "MMMM dd, yyyy")}
+            />
+            <SidebarItem
+              title={"Priority"}
+              description={
+                <div className="flex items-center gap-x-2">
+                  <span>{currentStatus.label}</span>
+                </div>
+              }
+            />
+
+            <SidebarItem
+              title={"Deadline"}
+              description={format(new Date(deadline), "MMMM dd, yyyy")}
+            />
+            <SidebarItem
+              title={"Priority"}
+              description={
+                <div className="flex items-center">
+                  <span>{curPriority.label}</span>
+                </div>
+              }
+            />
+            <SidebarItem
+              title={"Assignee"}
+              description={
+                <div className="flex items-center gap-x-2">
+                  <Avatar>
+                    <AvatarFallback className="h-9 w-9 uppercase">
+                      {assigned.firstName[0]}
+                      {assigned.lastName[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <h5 className="text-base font-medium">
+                    {assigned.firstName}&nbsp;
+                    {assigned.lastName}
+                  </h5>
+                </div>
+              }
+            />
+          </div>
+
+          <Link href={"/dashboard/tasks"} className="hidden md:flex">
             <Button variant="link" className="p-0 text-gray-500">
               <ArrowLeft size={20} className="mr-1" />
               Go back
@@ -54,7 +106,7 @@ export default async function Page({ params }: Props) {
             <CommentsServer taskId={id} />
           </Suspense>
         </div>
-        <div className="col-span-1 flex flex-col space-y-4">
+        <div className="col-span-1 hidden flex-col space-y-4 md:flex">
           <SidebarItem
             title={"Date started"}
             description={format(new Date(createdAt), "MMMM dd, yyyy")}
