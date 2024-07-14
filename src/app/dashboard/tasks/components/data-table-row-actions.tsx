@@ -35,7 +35,6 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const task = row.original as Task;
   const router = useRouter();
-  console.log(task.assignedId, "task.assignedId");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteTaskDialogOpen, setIsDeleteTaskDialog] = useState(false);
 

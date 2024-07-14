@@ -22,7 +22,6 @@ export default function Page() {
   const onSubmit: SubmitHandler<ILogin> = async (data) => {
     const res = await signIn("credentials", { ...data });
 
-    console.log({ res });
   };
 
   return (

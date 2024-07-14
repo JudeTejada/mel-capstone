@@ -1,15 +1,7 @@
-import { promises as fs } from "fs";
-import path from "path";
-import { Metadata } from "next";
-import Image from "next/image";
-import { z } from "zod";
-
+import type { Metadata } from "next";
 import { columns } from "./components/columnts";
-import { taskSchema } from "./schema";
 
-import tasksJson from "./tasks.json";
 import { DataTable } from "./components/data-table";
-import { UserNav } from "~/app/_components/UserNav";
 import { api } from "~/trpc/server";
 export const metadata: Metadata = {
   title: "Tasks",
@@ -18,8 +10,6 @@ export const metadata: Metadata = {
 
 export default async function TaskPage() {
   const tasks = await api.tasks.getAllTasks();
-
-  console.log({ tasks });
 
   return (
     <>

@@ -41,8 +41,6 @@ export function CommentsSection({ comments, taskId }: Props) {
     },
   });
 
-  console.log({ comments });
-
   const onSubmit = (data: ICommentSchema) => {
     mutate({ taskId: taskId, text: data.comment });
   };
