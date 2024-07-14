@@ -1,17 +1,26 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 
 import { Checkbox } from "~/components/ui/checkbox";
 
 import { priorities, statuses } from "../data";
-import { Task } from "../schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { format } from "date-fns";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Task } from "@prisma/client";
 
-export const columns: ColumnDef<Task>[] = [
+//
+export const columns: ColumnDef<
+  Task & {
+    assigned: {
+      firstName: string;
+      lastName: string;
+    };
+  }
+>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -65,15 +74,17 @@ export const columns: ColumnDef<Task>[] = [
             <Avatar>
               <AvatarFallback className="h-9 w-9">
                 <AvatarFallback className="uppercase">
-                  {/* @ts-ignore */}
+                  {/* @ts-expect-error  value exists */}
                   {row.getValue("assigned").firstName[0]}
-                  {/* @ts-ignore */}
+                  {/* @ts-expect-error  value exists */}
                   {row.getValue("assigned").lastName[0]}
                 </AvatarFallback>
               </AvatarFallback>
             </Avatar>
             <h5 className="text-base font-medium">
-              {row.getValue("assigned").firstName}&nbsp;
+              {/* @ts-expect-error  value exists */}
+              {row.getValue("assigned")!.firstName}&nbsp;
+              {/* @ts-expect-error  value exists */}
               {row.getValue("assigned").lastName}
             </h5>
           </div>
@@ -168,6 +179,6 @@ export const columns: ColumnDef<Task>[] = [
 
   {
     id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row}  />,
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];
