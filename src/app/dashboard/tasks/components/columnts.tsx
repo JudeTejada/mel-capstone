@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 "use client";
 
@@ -10,9 +12,8 @@ import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { format } from "date-fns";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
-import { Task } from "@prisma/client";
+import type { Task } from "@prisma/client";
 
-//
 export const columns: ColumnDef<
   Task & {
     assigned: {
@@ -74,10 +75,8 @@ export const columns: ColumnDef<
             <Avatar>
               <AvatarFallback className="h-9 w-9">
                 <AvatarFallback className="uppercase">
-                  {/* @ts-expect-error  value exists */}
-                  {row.getValue("assigned").firstName[0]}
-                  {/* @ts-expect-error  value exists */}
-                  {row.getValue("assigned").lastName[0]}
+                  {row.original.assigned.firstName[0]}
+                  {row.original.assigned.lastName[0]}
                 </AvatarFallback>
               </AvatarFallback>
             </Avatar>
@@ -118,6 +117,7 @@ export const columns: ColumnDef<
       );
     },
     filterFn: (row, id, value) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       return value.includes(row.getValue(id));
     },
   },
