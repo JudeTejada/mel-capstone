@@ -18,6 +18,8 @@ export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
+  const statusColumn = table.getColumn("status");
+  const priorityColumn = table.getColumn("priority");
 
   return (
     <div className="flex items-center justify-between gap-2 py-4">
@@ -33,16 +35,16 @@ export function DataTableToolbar<TData>({
             className="h-9 pl-8 text-sm focus-visible:ring-2 focus-visible:ring-blue-500"
           />
         </div>
-        {table.getColumn("status") && (
+        {statusColumn && (
           <DataTableFacetedFilter
-            column={table.getColumn("status")}
+            column={statusColumn}
             title="Status"
             options={statuses}
           />
         )}
-        {table.getColumn("priority") && (
+        {priorityColumn && (
           <DataTableFacetedFilter
-            column={table.getColumn("priority")}
+            column={priorityColumn}
             title="Priority"
             options={priorities}
           />

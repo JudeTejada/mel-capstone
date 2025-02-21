@@ -37,14 +37,36 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const facets = column?.getFacetedUniqueValues();
-  const selectedValues = new Set(column?.getFilterValue() as string[]);
+  const selectedValues = React.useMemo(
+    () => new Set(column?.getFilterValue() as string[]),
+    [column]
+  );
+
+  const handleSelect = React.useCallback(
+    (value: string) => {
+      if (!column) return;
+
+      const updatedValues = new Set(selectedValues);
+      if (updatedValues.has(value)) {
+        updatedValues.delete(value);
+      } else {
+        updatedValues.add(value);
+      }
+
+      const filterValues = Array.from(updatedValues);
+      column.setFilterValue(filterValues.length ? filterValues : undefined);
+    },
+    [column, selectedValues]
+  );
+
+  if (!column) return null;
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button 
-          variant="outline" 
-          size="sm" 
+        <Button
+          variant="outline"
+          size="sm"
           className="h-9 border-dashed hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           role="combobox"
           aria-label={`Filter by ${title}`}
@@ -86,13 +108,13 @@ export function DataTableFacetedFilter<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent 
-        className="w-[200px] p-0" 
+      <PopoverContent
+        className="w-[200px] p-0"
         align="start"
         side="bottom"
       >
         <Command>
-          <CommandInput 
+          <CommandInput
             placeholder={`Search ${title}...`}
             className="h-9"
           />
@@ -117,15 +139,16 @@ export function DataTableFacetedFilter<TData, TValue>({
                 return (
                   <CommandItem
                     key={option.value}
-                    onSelect={handleSelect}
+                    onSelect={() => handleSelect(option.value)}
+                    onClick={() => handleSelect(option.value)}
                     className="text-gray-800 hover:bg-gray-50"
                   >
                     <div
                       className={cn(
                         "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                        isSelected
+                        selectedValues.has(option.value)
                           ? "bg-primary text-primary-foreground"
-                          : "opacity-50 [&_svg]:invisible",
+                          : "opacity-50 [&_svg]:invisible"
                       )}
                     >
                       <CheckIcon className={cn("h-4 w-4")} />
