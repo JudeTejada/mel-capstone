@@ -13,7 +13,21 @@ export default function Page() {
   const { toast } = useToast();
 
   const { mutate, error, isPending } = api.auth.register.useMutation({
-    onSuccess: () => router.push("/auth//login"),
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Account created successfully! Please login.",
+        variant: "default",
+      });
+      router.push("/auth/login");
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Something went wrong",
+        variant: "destructive",
+      });
+    },
   });
 
   return (

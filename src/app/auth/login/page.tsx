@@ -4,7 +4,7 @@ import { Spinner } from "~/app/ui";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { useToast } from "~/components/ui/use-toast";
+import { toast, useToast } from "~/components/ui/use-toast";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { signIn } from "next-auth/react";
 
@@ -20,10 +20,20 @@ export default function Page() {
   } = useForm<ILogin>();
 
   const onSubmit: SubmitHandler<ILogin> = async (data) => {
-    const res = await signIn("credentials", { ...data });
+    const res = await signIn("credentials", {
+      ...data,
+      redirect: false,
+    });
 
+    if (!res?.ok) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Invalid email or password",
+      });
+      return;
+    }
   };
-
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">

@@ -53,10 +53,13 @@ export const authOptions: NextAuthOptions = {
       },
       authorize: async (credentials, req) => {
         const cred = await loginSchema.parseAsync(credentials);
+        console.log("🚀 ~ authorize: ~ cred:", cred)
 
         const user = await db.user.findFirst({
           where: { email: cred.email },
         });
+
+        console.log("🚀 ~ authorize: ~ user:", user);
 
         if (!user) {
           return null;
@@ -71,7 +74,9 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        // Explicitly return the user with additional fields
+        console.log("🚀 ~ authorize: ~ isValidPassword:", isValidPassword);
+
+        // Explicitly return the user with additional fields;
         return {
           id: user.id,
           email: user.email,
