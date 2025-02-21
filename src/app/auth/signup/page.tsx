@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Spinner } from "~/app/ui";
@@ -6,13 +7,29 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { useToast } from "~/components/ui/use-toast";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { api } from "~/trpc/react";
+import { Eye, EyeOff } from "lucide-react";
+
+interface ISignupForm {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}
 
 export default function Page() {
   const router = useRouter();
   const { toast } = useToast();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const { mutate, error, isPending } = api.auth.register.useMutation({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ISignupForm>();
+
+  const { mutate, isPending } = api.auth.register.useMutation({
     onSuccess: () => {
       toast({
         title: "Success",
@@ -30,83 +47,129 @@ export default function Page() {
     },
   });
 
+  const onSubmit: SubmitHandler<ISignupForm> = (data) => {
+    mutate(data);
+  };
+
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Sign up to your account
-        </h2>
-      </div>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+            Create your account
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Already have an account?{" "}
+            <Link href="/auth/login" className="font-medium text-primary hover:text-primary/90">
+              Sign in
+            </Link>
+          </p>
+        </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form
-          className="space-y-6"
-          onSubmit={(e) => {
-            e.preventDefault();
-            const formData = new FormData(e.currentTarget);
-            const email = formData.get("email") as string | null;
-            const password = formData.get("password") as string | null;
+        <div className="mt-8 rounded-lg bg-white p-6 shadow-lg">
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First name</Label>
+                <Input
+                  id="firstName"
+                  {...register("firstName", {
+                    required: "First name is required",
+                  })}
+                  placeholder="John"
+                  className={errors.firstName ? "border-red-500" : ""}
+                  aria-invalid={errors.firstName ? "true" : "false"}
+                />
+                {errors.firstName && (
+                  <p className="text-sm text-red-500" role="alert">
+                    {errors.firstName.message}
+                  </p>
+                )}
+              </div>
 
-            const firstName = formData.get("firstName") as string;
-            const lastName = formData.get("lastName") as string;
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last name</Label>
+                <Input
+                  id="lastName"
+                  {...register("lastName", {
+                    required: "Last name is required",
+                  })}
+                  placeholder="Doe"
+                  className={errors.lastName ? "border-red-500" : ""}
+                  aria-invalid={errors.lastName ? "true" : "false"}
+                />
+                {errors.lastName && (
+                  <p className="text-sm text-red-500" role="alert">
+                    {errors.lastName.message}
+                  </p>
+                )}
+              </div>
+            </div>
 
-            if (email && password) {
-              mutate({
-                email: email,
-                password: password,
-                firstName: firstName,
-                lastName: lastName,
-              });
-            } else {
-              toast({
-                title: "Error",
-                description: "Email or password is missing",
-              });
-            }
-          }}
-        >
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="firstName">First name</Label>
-            <Input
-              type="firstName"
-              name="firstName"
-              id="firstName"
-              placeholder="First Nme"
-            />
-          </div>
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input
-              type="lastName"
-              name="lastName"
-              id="lastName"
-              placeholder="Last Name"
-            />
-          </div>
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="email">email</Label>
-            <Input type="email" name="email" id="email" placeholder="Email" />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email address</Label>
+              <Input
+                id="email"
+                type="email"
+                autoComplete="email"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address",
+                  },
+                })}
+                placeholder="john.doe@example.com"
+                className={errors.email ? "border-red-500" : ""}
+                aria-invalid={errors.email ? "true" : "false"}
+              />
+              {errors.email && (
+                <p className="text-sm text-red-500" role="alert">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
 
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="password">password</Label>
-            <Input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="Passowrd"
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
+                  placeholder="Create a secure password"
+                  className={errors.password ? "border-red-500" : ""}
+                  aria-invalid={errors.password ? "true" : "false"}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="text-sm text-red-500" role="alert">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
 
-          <Button className="w-full">
-            {isPending ? <Spinner /> : "Create an account"}
-          </Button>
-          <Link href={"/auth/login"}>
-            <Button variant="link" className="w-full">
-              Already have an account?
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? <Spinner className="mr-2" /> : null}
+              {isPending ? "Creating account..." : "Create account"}
             </Button>
-          </Link>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
