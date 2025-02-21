@@ -67,7 +67,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          className="h-9 border-dashed hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="h-9 w-full sm:w-auto border-dashed hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           role="combobox"
           aria-label={`Filter by ${title}`}
         >
@@ -78,11 +78,11 @@ export function DataTableFacetedFilter<TData, TValue>({
               <Separator orientation="vertical" className="mx-2 h-4" />
               <Badge
                 variant="secondary"
-                className="rounded-sm px-1 font-normal lg:hidden"
+                className="rounded-sm px-1 font-normal sm:hidden"
               >
                 {selectedValues.size}
               </Badge>
-              <div className="hidden space-x-1 lg:flex">
+              <div className="hidden sm:flex space-x-1">
                 {selectedValues.size > 2 ? (
                   <Badge
                     variant="secondary"

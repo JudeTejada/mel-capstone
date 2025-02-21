@@ -38,10 +38,10 @@ export default async function Page({ params }: Props) {
   const curPriority = priorities.find((item) => item.value === priority)!;
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto px-4 py-6">
       <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-4">
-        <div className="col-span-3 rounded-lg bg-white p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
+        <div className="col-span-3 rounded-lg bg-white p-4 md:p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
             <Link href={"/dashboard/tasks"} className="flex">
               <Button variant="link" className="p-0 text-gray-500 hover:text-gray-700">
                 <ArrowLeft size={20} className="mr-1" />
@@ -62,7 +62,7 @@ export default async function Page({ params }: Props) {
           </div>
 
           <div className="mb-8">
-            <h3 className="text-2xl font-bold tracking-tight md:text-4xl mb-4">{title}</h3>
+            <h3 className="text-xl md:text-2xl lg:text-4xl font-bold tracking-tight mb-4">{title}</h3>
             <div className="prose max-w-none">
               <div
                 className="text-base text-gray-700"
@@ -78,7 +78,7 @@ export default async function Page({ params }: Props) {
           </div>
         </div>
 
-        <div className="col-span-1 hidden flex-col space-y-6 rounded-lg bg-white p-6 shadow-sm md:flex">
+        <div className="col-span-1 flex flex-col space-y-6 rounded-lg bg-white p-4 md:p-6 shadow-sm order-first md:order-last">
           <h4 className="text-lg font-semibold mb-4">Task Details</h4>
 
           <div className="space-y-6 border-b pb-6">

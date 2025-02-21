@@ -13,7 +13,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 
 export default function Page() {
   return (
-    <div className="flex w-full flex-col gap-y-4">
+    <div className="flex w-full flex-col gap-y-4 px-4 md:px-0">
       <Suspense
         fallback={
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -28,7 +28,7 @@ export default function Page() {
       <div className="flex flex-col gap-4 md:flex-row">
         <Suspense
           fallback={
-            <Card className="w-full md:w-1/2">
+            <Card className="w-full">
               <CardHeader>
                 <Skeleton className="h-6 w-[120px]" />
                 <Skeleton className="h-4 w-[180px]" />
@@ -47,7 +47,7 @@ export default function Page() {
         </Suspense>
         <Suspense
           fallback={
-            <Card className="w-full md:w-1/2">
+            <Card className="w-full">
               <CardHeader>
                 <Skeleton className="h-6 w-[120px]" />
                 <Skeleton className="h-4 w-[180px]" />
