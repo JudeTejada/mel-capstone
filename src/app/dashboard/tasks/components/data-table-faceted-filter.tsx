@@ -37,13 +37,18 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const facets = column?.getFacetedUniqueValues();
-
   const selectedValues = new Set(column?.getFilterValue() as string[]);
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="h-9 border-dashed hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          role="combobox"
+          aria-label={`Filter by ${title}`}
+        >
           <PlusCircledIcon className="mr-2 h-4 w-4" />
           {title}
           {selectedValues?.size > 0 && (
@@ -81,9 +86,16 @@ export function DataTableFacetedFilter<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0" align="start">
+      <PopoverContent 
+        className="w-[200px] p-0" 
+        align="start"
+        side="bottom"
+      >
         <Command>
-          <CommandInput placeholder={title} />
+          <CommandInput 
+            placeholder={`Search ${title}...`}
+            className="h-9"
+          />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
@@ -106,11 +118,9 @@ export function DataTableFacetedFilter<TData, TValue>({
                   <CommandItem
                     key={option.value}
                     onSelect={handleSelect}
-                    className="text-gray-800"
-                    disabled={false}
+                    className="text-gray-800 hover:bg-gray-50"
                   >
-                    <button
-                      onClick={handleSelect}
+                    <div
                       className={cn(
                         "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
                         isSelected
@@ -119,7 +129,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       )}
                     >
                       <CheckIcon className={cn("h-4 w-4")} />
-                    </button>
+                    </div>
                     {option.icon && (
                       <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                     )}
@@ -139,7 +149,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                 <CommandGroup>
                   <CommandItem
                     onSelect={() => column?.setFilterValue(undefined)}
-                    className="justify-center text-center"
+                    className="justify-center text-center text-sm text-gray-500 hover:text-gray-900"
                   >
                     Clear filters
                   </CommandItem>

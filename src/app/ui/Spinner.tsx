@@ -1,10 +1,11 @@
 import React from "react";
+import { cn } from "~/lib/utils";
 
 
-export function Spinner() {
+export function Spinner({className}:{className?:string}) {
   return (
     <svg
-      className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
+      className={cn("-ml-1 mr-3 h-5 w-5 animate-spin text-white", className)}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

@@ -31,13 +31,13 @@ export function MemberStatsClient({ users }: MemberStatsClientProps) {
         {users.map((user) => (
           <Card
             key={user.id}
-            className="group cursor-pointer border-gray-200 transition-all hover:border-primary/20 hover:shadow-md border-none"
+            className="group cursor-pointer border-none border-gray-200 transition-all hover:border-primary/20 hover:shadow-md"
             onClick={() => setSelectedUser(user)}
           >
             <CardContent className="flex flex-col space-y-4 p-6">
               <div className="flex items-center space-x-4">
                 <Avatar className="h-12 w-12 border-2 border-gray-200 transition-all group-hover:border-primary/20">
-                  <AvatarFallback className="bg-primary/10 text-primary">
+                  <AvatarFallback className="bg-slate-100 text-primary">
                     {user.firstName[0]}
                     {user.lastName[0]}
                   </AvatarFallback>
@@ -51,7 +51,6 @@ export function MemberStatsClient({ users }: MemberStatsClientProps) {
                   </p>
                 </div>
               </div>
-
             </CardContent>
           </Card>
         ))}

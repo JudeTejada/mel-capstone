@@ -130,7 +130,7 @@ export default function Page() {
             </div>
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? <Spinner className="mr-2" /> : null}
+              {isLoading ? <Spinner  /> : null}
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>

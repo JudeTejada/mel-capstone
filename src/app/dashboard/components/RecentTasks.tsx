@@ -36,7 +36,7 @@ export async function RecentTasks() {
                 <div className="group flex items-center justify-between rounded-lg p-2 transition-all hover:bg-gray-50 cursor-pointer">
                   <div className="flex items-center space-x-4">
                     <Avatar className="h-10 w-10 border-2 border-gray-200">
-                      <AvatarFallback className="bg-primary/10 text-primary">
+                      <AvatarFallback className="bg-slate-100 text-primary">
                         {item.assigned.firstName[0]}
                         {item.assigned.lastName[0]}
                       </AvatarFallback>

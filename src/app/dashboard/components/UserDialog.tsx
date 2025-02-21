@@ -54,7 +54,7 @@ export function UserDialog({ selectedUser, onOpenChange }: UserDialogProps) {
             <DialogHeader>
               <DialogTitle className="flex items-center gap-4">
                 <Avatar className="h-10 w-10 border-2 border-gray-200">
-                  <AvatarFallback className="bg-primary/10 text-primary">
+                  <AvatarFallback className="bg-slate-100 text-primary">
                     {userData.firstName[0]}
                     {userData.lastName[0]}
                   </AvatarFallback>
