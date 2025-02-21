@@ -7,6 +7,7 @@ import {
 } from "~/components/ui/card";
 import { HeroContent } from "./components/HeroContent";
 import { RecentTasks } from "./components/RecentTasks";
+import { MemberStats } from "./components/MemberStats";
 import { Suspense } from "react";
 import { Skeleton } from "~/components/ui/skeleton";
 
@@ -24,10 +25,46 @@ export default function Page() {
       >
         <HeroContent />
       </Suspense>
-
-      <Suspense fallback="loading">
-        <RecentTasks />
-      </Suspense>
+      <div className="flex flex-col gap-4 md:flex-row">
+        <Suspense
+          fallback={
+            <Card className="w-full md:w-1/2">
+              <CardHeader>
+                <Skeleton className="h-6 w-[120px]" />
+                <Skeleton className="h-4 w-[180px]" />
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-12 w-full" />
+                </div>
+              </CardContent>
+            </Card>
+          }
+        >
+          <RecentTasks />
+        </Suspense>
+        <Suspense
+          fallback={
+            <Card className="w-full md:w-1/2">
+              <CardHeader>
+                <Skeleton className="h-6 w-[120px]" />
+                <Skeleton className="h-4 w-[180px]" />
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-12 w-full" />
+                  <Skeleton className="h-12 w-full" />
+                </div>
+              </CardContent>
+            </Card>
+          }
+        >
+          <MemberStats />
+        </Suspense>
+      </div>
     </div>
   );
 }
