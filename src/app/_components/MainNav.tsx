@@ -1,6 +1,6 @@
 "use client";
 import { Plus } from "lucide-react";
-import { Session } from "next-auth";
+import { type Session } from "next-auth";
 import Link from "next/link";
 
 import { cn } from "~/lib/utils";

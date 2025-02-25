@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { MainNav } from "../_components/MainNav";
 import { UserNav } from "../_components/UserNav";
 import { getServerAuthSession } from "~/server/auth";

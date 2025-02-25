@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/react";
 import { useToast } from "~/components/ui/use-toast";
@@ -17,6 +16,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 
 type Project = {
   id: string;
@@ -269,7 +269,7 @@ export function ProjectsOverview() {
                 <Input
                   id="budget"
                   type="number"
-                  value={formData.budget ?? ""
+                  value={formData.budget ?? ""}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,

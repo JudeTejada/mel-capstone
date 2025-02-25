@@ -110,10 +110,6 @@ export function EditTaskModal({ taskData, isOpen, setIsOpen }: Props) {
                       defaultValue={field.value}
                       {...field}
                       onValueChange={setValue.bind(null, "projectId")}
-                      className={cn(
-                        fieldState.error &&
-                          "border-red-500 focus-visible:ring-red-500",
-                      )}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a project" />
@@ -158,7 +154,7 @@ export function EditTaskModal({ taskData, isOpen, setIsOpen }: Props) {
                         users?.result.map((user) => ({
                           label: `${user.firstName} ${user.lastName}`,
                           value: user.id,
-                        })) || []
+                        })) ?? []
                       }
                       onValueChange={(val) => setValue("assigneeIds", val)}
                       defaultValue={field.value}
@@ -187,7 +183,7 @@ export function EditTaskModal({ taskData, isOpen, setIsOpen }: Props) {
             <Controller
               name="id"
               control={control}
-              render={({ field, fieldState }) => (
+              render={({ field }) => (
                 <>
                   <input type="id" {...field} hidden name="id" />
                 </>

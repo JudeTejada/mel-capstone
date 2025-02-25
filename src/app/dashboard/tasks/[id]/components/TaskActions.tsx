@@ -17,17 +17,11 @@ import {
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
 import { Spinner } from "~/app/ui";
+import { Task } from "@prisma/client";
+import type { IEditTaskSchema } from "~/validation/task";
 
 type Props = {
-  taskData: {
-    id: string;
-    title: string;
-    description: string | null;
-    deadline: Date | null;
-    priority: string | null;
-    status: string | null;
-    userId: string | null;
-  };
+  taskData: IEditTaskSchema;
 };
 
 export function TaskActions({ taskData }: Props) {
@@ -36,24 +30,25 @@ export function TaskActions({ taskData }: Props) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  const { mutate: deleteTask, isPending: isDeleting } = api.tasks.deleteTask.useMutation({
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Task deleted successfully",
-        variant: "default",
-      });
-      router.push("/dashboard/tasks");
-      router.refresh();
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: error.message || "Something went wrong",
-        variant: "destructive",
-      });
-    },
-  });
+  const { mutate: deleteTask, isPending: isDeleting } =
+    api.tasks.deleteTask.useMutation({
+      onSuccess: () => {
+        toast({
+          title: "Success",
+          description: "Task deleted successfully",
+          variant: "default",
+        });
+        router.push("/dashboard/tasks");
+        router.refresh();
+      },
+      onError: (error) => {
+        toast({
+          title: "Error",
+          description: error.message || "Something went wrong",
+          variant: "destructive",
+        });
+      },
+    });
 
   const handleDelete = () => {
     deleteTask({ id: taskData.id });
@@ -61,7 +56,11 @@ export function TaskActions({ taskData }: Props) {
 
   return (
     <div className="flex items-center gap-x-2">
-      <EditTaskModal taskData={taskData} isOpen={isEditOpen} setIsOpen={setIsEditOpen} />
+      <EditTaskModal
+        taskData={taskData}
+        isOpen={isEditOpen}
+        setIsOpen={setIsEditOpen}
+      />
       <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <Button
           variant="destructive"
@@ -75,8 +74,8 @@ export function TaskActions({ taskData }: Props) {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the task and
-              remove it from our servers.
+              This action cannot be undone. This will permanently delete the
+              task and remove it from our servers.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

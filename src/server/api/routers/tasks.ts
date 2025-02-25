@@ -20,15 +20,9 @@ export const tasksRouter = createTRPCRouter({
           description: input.description,
           status: input.status,
           assignees: {
-            connect: input.assigneeIds?.map((id) => ({ id })) || [],
+            connect: input.assigneeIds?.map((id) => ({ id })) ?? [],
           },
-          project: {
-            connect: { id: input.projectId },
-          },
-          deadline: new Date(input.deadline),
-          priority: input.priority,
-          estimatedHours: input.estimatedHours,
-          actualHours: input.actualHours || 0,
+          actualHours: input.actualHours ?? 0,
         },
       });
 
@@ -48,15 +42,9 @@ export const tasksRouter = createTRPCRouter({
           description: input.description,
           status: input.status,
           assignees: {
-            set: input.assigneeIds?.map((id) => ({ id })) || [],
+            set: input.assigneeIds?.map((id) => ({ id })) ?? [],
           },
-          project: {
-            connect: { id: input.projectId },
-          },
-          deadline: new Date(input.deadline),
-          priority: input.priority,
-          estimatedHours: input.estimatedHours,
-          actualHours: input.actualHours || 0,
+          actualHours: input.actualHours ?? 0,
         },
       });
 
@@ -109,6 +97,7 @@ export const tasksRouter = createTRPCRouter({
           deadline: true,
           priority: true,
           createdAt: true,
+          actualHours:true,
           description: true,
           estimatedHours: true,
           project: {
@@ -301,11 +290,10 @@ export const tasksRouter = createTRPCRouter({
 //   typeof tasksRouter.getAllCommentsByTaskID._def.type
 // >;
 
+// Remove unused test type
 export type GetAllCommentsByTaskIDReturnType = Awaited<
   ReturnType<typeof tasksRouter.getAllCommentsByTaskID>
 >;
 export type GetTaskByIdReturnType = Awaited<
   ReturnType<typeof tasksRouter.getTaskById>
 >;
-
-type test = GetAllCommentsByTaskIDReturnType["data"];

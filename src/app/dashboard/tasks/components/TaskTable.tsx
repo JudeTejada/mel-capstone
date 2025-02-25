@@ -1,11 +1,7 @@
 "use client";
-import { revalidatePath } from "next/cache";
 
 import * as React from "react";
 import { useState } from "react";
-
-import { api } from "~/trpc/react";
-import { useToast } from "~/components/ui/use-toast";
 
 import {
   Table,
@@ -24,7 +20,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Status } from "@prisma/client";
+import type { Status } from "@prisma/client";
 import { format } from "date-fns";
 import { Button } from "~/components/ui/button";
 import { AddTaskModal } from "~/app/_components/AddTaskModal";
@@ -88,30 +84,10 @@ export function TaskTable({ tasks }: TaskTableProps) {
   const [assigneeSort, setAssigneeSort] = useState<string | null>(null);
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [isEditTaskOpen, setIsEditTaskOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedTask, setSelectedTask] = useState<
+    (Task & { project: { title: string; id: string } }) | null
+  >(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const { toast } = useToast();
-
-  const { mutate: deleteTaskMutation } = api.tasks.deleteTask.useMutation({
-      onSuccess: () => {
-        toast({
-          title: "Success",
-          description: "Task deleted successfully",
-          variant: "default",
-        });
-        revalidatePath("/dashboard/tasks");
-
-        setIsDeleteOpen(false);
-        setSelectedTask(null);
-      },
-      onError: (error) => {
-        toast({
-          title: "Error",
-          description: error.message || "Something went wrong",
-          variant: "destructive",
-        });
-      },
-    });
 
   // Get unique project titles for filter
   const uniqueProjects = Array.from(
@@ -274,7 +250,7 @@ export function TaskTable({ tasks }: TaskTableProps) {
       <div>
         <div className="hidden grid-cols-1 gap-4 sm:grid sm:grid-cols-2 md:grid-cols-4">
           <Select
-            value={projectSort || undefined}
+            value={projectSort ?? undefined}
             onValueChange={setProjectSort}
           >
             <SelectTrigger className="w-full">
@@ -290,7 +266,7 @@ export function TaskTable({ tasks }: TaskTableProps) {
             </SelectContent>
           </Select>
           <Select
-            value={prioritySort || undefined}
+            value={prioritySort ?? undefined}
             onValueChange={setPrioritySort}
           >
             <SelectTrigger className="w-full">
@@ -304,7 +280,7 @@ export function TaskTable({ tasks }: TaskTableProps) {
             </SelectContent>
           </Select>
           <Select
-            value={assigneeSort || undefined}
+            value={assigneeSort ?? undefined}
             onValueChange={setAssigneeSort}
           >
             <SelectTrigger className="w-full">
@@ -337,7 +313,7 @@ export function TaskTable({ tasks }: TaskTableProps) {
 
       <div className="space-y-4">
         {statusOrder.map((status) => {
-          const statusTasks = groupedTasks[status] || [];
+          const statusTasks = groupedTasks[status] ?? [];
 
           return (
             <div key={status} className="rounded-lg border">

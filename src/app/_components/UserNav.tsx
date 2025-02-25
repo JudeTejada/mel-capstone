@@ -1,5 +1,5 @@
 "use client";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
@@ -12,14 +12,11 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { getServerAuthSession } from "~/server/auth";
-import { api } from "~/trpc/react";
 
 type Props = {
   user: Session;
 };
 export function UserNav({ user }: Props) {
-  // const { pr } = api.users.getAllUsers.useQuery();
   const {
     user: { firstName, lastName, email },
   } = user;

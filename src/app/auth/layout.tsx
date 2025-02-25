@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { getServerAuthSession } from "~/server/auth";
 
 export default async function Page({ children }: PropsWithChildren) {

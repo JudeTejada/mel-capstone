@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { ArrowLeft, CalendarIcon, ClockIcon, FlagIcon, UserIcon, ClipboardIcon, ClockIcon as TimeIcon } from "lucide-react";
+import { ArrowLeft, CalendarIcon, ClockIcon, FlagIcon, ClipboardIcon, ClockIcon as TimeIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/server";
@@ -49,7 +49,7 @@ export default async function Page({ params }: Props) {
                 Go back
               </Button>
             </Link>
-            <TaskActions
+            {/* <TaskActions
               taskData={{
                 id: taskId,
                 title,
@@ -62,7 +62,7 @@ export default async function Page({ params }: Props) {
                 estimatedHours,
                 actualHours
               }}
-            />
+            /> */}
           </div>
 
           <div className="mb-8">

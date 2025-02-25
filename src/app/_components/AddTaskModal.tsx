@@ -37,8 +37,7 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "~/components/ui/calendar";
 import { cn } from "~/lib/utils";
-import type { ItaskSchema } from "~/validation/task";
-import { taskSchema } from "~/validation/task";
+import { type ITaskSchema, taskSchema } from "~/validation/task";
 import { useRouter } from "next/navigation";
 import { Spinner } from "../ui";
 import { useToast } from "~/components/ui/use-toast";
@@ -54,7 +53,7 @@ export function AddTaskModal({ children, isOpen, setIsOpen }: Props) {
   const router = useRouter();
   const { toast } = useToast();
   const { handleSubmit, control, setValue, reset, formState } =
-    useForm<ItaskSchema>({
+    useForm<ITaskSchema>({
       resolver: zodResolver(taskSchema),
       defaultValues: {
         status: "TODO",
@@ -76,8 +75,8 @@ export function AddTaskModal({ children, isOpen, setIsOpen }: Props) {
     },
   });
 
-  const onSubmit: SubmitHandler<ItaskSchema> = (data) => {
-    mutate(data as any);
+  const onSubmit: SubmitHandler<ITaskSchema> = (data) => {
+    mutate(data);
   };
 
   return (
@@ -106,10 +105,6 @@ export function AddTaskModal({ children, isOpen, setIsOpen }: Props) {
                       onValueChange={(val: string) =>
                         setValue("projectId", val)
                       }
-                      className={cn(
-                        fieldState.error &&
-                          "border-red-500 focus-visible:ring-red-500",
-                      )}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a project" />
@@ -204,13 +199,9 @@ export function AddTaskModal({ children, isOpen, setIsOpen }: Props) {
                 <>
                   <Select
                     {...field}
-                    onValueChange={(val: ItaskSchema["status"]) =>
+                    onValueChange={(val: ITaskSchema["status"]) =>
                       setValue("status", val)
                     }
-                    className={cn(
-                      fieldState.error &&
-                        "border-red-500 focus-visible:ring-red-500",
-                    )}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a status" />
@@ -244,13 +235,9 @@ export function AddTaskModal({ children, isOpen, setIsOpen }: Props) {
                 <>
                   <Select
                     {...field}
-                    onValueChange={(val: ItaskSchema["priority"]) =>
+                    onValueChange={(val: ITaskSchema["priority"]) =>
                       setValue("priority", val)
                     }
-                    className={cn(
-                      fieldState.error &&
-                        "border-red-500 focus-visible:ring-red-500",
-                    )}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select priority" />
@@ -288,7 +275,7 @@ export function AddTaskModal({ children, isOpen, setIsOpen }: Props) {
                         users?.result.map((user) => ({
                           label: `${user.firstName} ${user.lastName}`,
                           value: user.id,
-                        })) || []
+                        })) ?? []
                       }
                       onValueChange={(val) => setValue("assigneeIds", val)}
                       defaultValue={field.value}

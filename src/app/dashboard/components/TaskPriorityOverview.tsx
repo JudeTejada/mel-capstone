@@ -49,7 +49,7 @@ export function TaskPriorityOverview() {
                   callbacks: {
                     label: (context) => {
                       const label = context.label || "";
-                      const value = context.raw || 0;
+                      const value = typeof context.raw === "number" ? context.raw : 0;
                       return `${label}: ${value} tasks`;
                     },
                   },

@@ -49,16 +49,16 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      profile(profile) {
+      profile(profile: { sub: string; given_name?: string; family_name?: string; email: string; picture?: string }) {
         return {
-          id: profile.sub as string,
-          firstName: profile.given_name as string ?? "",
-          lastName: profile.family_name as string ?? "", // Ensure lastName is always provided
-          email: profile.email as string,
-          image: profile.picture as string,
+          id: profile.sub,
+          firstName: profile.given_name ?? "",
+          lastName: profile.family_name ?? "",
+          email: profile.email,
+          image: profile.picture ?? "",
           role: "USER",
-          password: "", // Empty password for OAuth users
-          position: "" // Default empty position for OAuth users
+          password: "",
+          position: ""
         };
       },
     }),
@@ -68,7 +68,7 @@ export const authOptions: NextAuthOptions = {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
-      authorize: async (credentials, req) => {
+      authorize: async (credentials) => {
         const cred = await loginSchema.parseAsync(credentials);
         console.log("🚀 ~ authorize: ~ cred:", cred)
 
