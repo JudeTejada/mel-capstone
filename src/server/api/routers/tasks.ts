@@ -1,5 +1,4 @@
 import { Priority, Status } from "@prisma/client";
-import { inferAsyncReturnType } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
@@ -20,11 +19,16 @@ export const tasksRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           status: input.status,
-          assigned: {
-            connect: { id: input.userId },
+          assignees: {
+            connect: input.assigneeIds?.map((id) => ({ id })) || [],
+          },
+          project: {
+            connect: { id: input.projectId },
           },
           deadline: new Date(input.deadline),
           priority: input.priority,
+          estimatedHours: input.estimatedHours,
+          actualHours: input.actualHours || 0,
         },
       });
 
@@ -43,11 +47,16 @@ export const tasksRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           status: input.status,
-          assigned: {
-            connect: { id: input.userId },
+          assignees: {
+            set: input.assigneeIds?.map((id) => ({ id })) || [],
+          },
+          project: {
+            connect: { id: input.projectId },
           },
           deadline: new Date(input.deadline),
           priority: input.priority,
+          estimatedHours: input.estimatedHours,
+          actualHours: input.actualHours || 0,
         },
       });
 
@@ -96,12 +105,18 @@ export const tasksRouter = createTRPCRouter({
           id: true,
           title: true,
           status: true,
-          assigned: true,
+          assignees: true,
           deadline: true,
           priority: true,
           createdAt: true,
-          assignedId: true,
           description: true,
+          estimatedHours: true,
+          project: {
+            select: {
+              id: true,
+              title: true,
+            },
+          },
         },
       });
 
@@ -123,15 +138,13 @@ export const tasksRouter = createTRPCRouter({
       orderBy: {
         createdAt: "desc",
       },
-      where: {
-        status: "INPROGRESS" || "TODO",
-      },
+
       take: 5,
       select: {
         id: true,
         title: true,
         status: true,
-        assigned: true,
+        assignees: true,
 
         deadline: true,
         priority: true,
@@ -150,16 +163,28 @@ export const tasksRouter = createTRPCRouter({
       orderBy: {
         createdAt: "desc",
       },
-
       select: {
         id: true,
         title: true,
         status: true,
-        assigned: true,
-        deadline: true,
+        assignees: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            image: true,
+          },
+        },
+        project: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
         priority: true,
+        estimatedHours: true,
+        deadline: true,
         createdAt: true,
-        assignedId: true,
         description: true,
       },
     });
@@ -243,6 +268,33 @@ export const tasksRouter = createTRPCRouter({
         data: comments,
       };
     }),
+  getTasksByStatus: protectedProcedure.query(async ({ ctx }) => {
+    const taskCounts = await ctx.db.task.groupBy({
+      by: ["status"],
+      _count: {
+        status: true,
+      },
+    });
+
+    const todoCount =
+      taskCounts.find((count) => count.status === Status.TODO)?._count
+        .status ?? 0;
+    const inProgressCount =
+      taskCounts.find((count) => count.status === Status.INPROGRESS)?._count
+        .status ?? 0;
+    const completedCount =
+      taskCounts.find((count) => count.status === Status.COMPLETED)?._count
+        .status ?? 0;
+
+    return {
+      status: 200,
+      data: {
+        todo: todoCount,
+        inProgress: inProgressCount,
+        completed: completedCount,
+      },
+    };
+  }),
 });
 
 // export type GetAllCommentsByTaskIDReturnType = inferAsyncReturnType<
@@ -255,7 +307,5 @@ export type GetAllCommentsByTaskIDReturnType = Awaited<
 export type GetTaskByIdReturnType = Awaited<
   ReturnType<typeof tasksRouter.getTaskById>
 >;
-
-
 
 type test = GetAllCommentsByTaskIDReturnType["data"];

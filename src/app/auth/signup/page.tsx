@@ -16,6 +16,7 @@ interface ISignupForm {
   password: string;
   firstName: string;
   lastName: string;
+  position: string;
 }
 
 export default function Page() {
@@ -126,6 +127,24 @@ export default function Page() {
               {errors.email && (
                 <p className="text-sm text-red-500" role="alert">
                   {errors.email.message}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="position">Position</Label>
+              <Input
+                id="position"
+                {...register("position", {
+                  required: "Position is required",
+                })}
+                placeholder="Enter your position"
+                className={errors.position ? "border-red-500" : ""}
+                aria-invalid={errors.position ? "true" : "false"}
+              />
+              {errors.position && (
+                <p className="text-sm text-red-500" role="alert">
+                  {errors.position.message}
                 </p>
               )}
             </div>

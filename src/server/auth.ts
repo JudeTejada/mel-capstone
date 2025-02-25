@@ -51,13 +51,14 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       profile(profile) {
         return {
-          id: profile.sub,
-          firstName: profile.given_name ?? "",
-          lastName: profile.family_name ?? "", // Ensure lastName is always provided
-          email: profile.email,
-          image: profile.picture,
+          id: profile.sub as string,
+          firstName: profile.given_name as string ?? "",
+          lastName: profile.family_name as string ?? "", // Ensure lastName is always provided
+          email: profile.email as string,
+          image: profile.picture as string,
           role: "USER",
           password: "", // Empty password for OAuth users
+          position: "" // Default empty position for OAuth users
         };
       },
     }),
@@ -100,6 +101,7 @@ export const authOptions: NextAuthOptions = {
           lastName: user.lastName,
           image: user.image, // Include other necessary fields
           role: user.role,
+          position: user.position,
         };
       },
     }),

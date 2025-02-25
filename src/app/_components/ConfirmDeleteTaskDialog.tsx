@@ -14,6 +14,7 @@ import {
 import { api } from "~/trpc/react";
 import { Spinner } from "../ui";
 import { useRouter } from "next/navigation";
+import { toast } from "~/components/ui/use-toast";
 
 type Props = {
   open: boolean;
@@ -26,7 +27,12 @@ export function ConfirmDeleteTaskDialog({ open, setOpen, taskId }: Props) {
   const { mutate, isPending } = api.tasks.deleteTask.useMutation({
     onSuccess: () => {
       router.refresh();
-      revalidatePath("/", "layout");
+      toast({
+        title: "Success",
+        description: "Task deleted successfully",
+        variant: "default",
+      });
+      revalidatePath("/dashboard/tasks");
     },
   });
 

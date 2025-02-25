@@ -71,12 +71,11 @@ export const usersRouter = createTRPCRouter({
         },
       },
       select: {
+        position: true,
         id: true,
         email: true,
-        emailVerified: true,
         firstName: true,
         lastName: true,
-        image: true,
         role: true,
         _count: {
           select: {

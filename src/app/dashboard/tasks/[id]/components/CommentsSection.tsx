@@ -47,6 +47,13 @@ export function CommentsSection({ comments, taskId }: Props) {
       reset();
       router.refresh();
     },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to add comment. Please try again.",
+        variant: "destructive",
+      });
+    },
   });
 
   const onSubmit = (data: ICommentSchema) => {

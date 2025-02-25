@@ -5,11 +5,10 @@ import { Spinner } from "~/app/ui";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { toast, useToast } from "~/components/ui/use-toast";
+import { toast } from "~/components/ui/use-toast";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { signIn } from "next-auth/react";
-import { api } from "~/trpc/react";
-import { ILogin } from "~/validation/auth";
+import type { ILogin } from "~/validation/auth";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 

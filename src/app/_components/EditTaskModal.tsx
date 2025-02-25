@@ -4,12 +4,13 @@ import { useForm, Controller, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "~/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "~/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "~/components/ui/sheet";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import {
@@ -39,6 +40,7 @@ import { useRouter } from "next/navigation";
 import { Spinner } from "../ui";
 import { useToast } from "~/components/ui/use-toast";
 import { revalidatePath } from "next/cache";
+import { MultiSelect } from "~/components/ui/multi-select";
 
 type Props = {
   taskData: IEditTaskSchema;
@@ -55,16 +57,20 @@ export function EditTaskModal({ taskData, isOpen, setIsOpen }: Props) {
       id: taskData.id,
       deadline: taskData.deadline ?? null,
       description: taskData.description ?? "",
-      priority: taskData.priority ?? undefined, // Default to a valid enum value
+      priority: taskData.priority ?? undefined,
       title: taskData.title ?? "",
-      userId: taskData.userId ?? "",
-      status: taskData.status ?? undefined, // Default to a valid enum value
+      assigneeIds: taskData.assigneeIds ?? [],
+      projectId: taskData.projectId ?? "",
+      status: taskData.status ?? undefined,
+      estimatedHours: taskData.estimatedHours ?? 0,
+      actualHours: taskData.actualHours ?? 0,
     },
   });
 
-  const { data, isLoading } = api.users.getAllUsers.useQuery();
+  const { data: projects } = api.projects.getAllProjects.useQuery();
+  const { data: users, isLoading } = api.users.getAllUsers.useQuery();
 
-  const { mutate, error, isPending } = api.tasks.editTask.useMutation({
+  const { mutate, isPending } = api.tasks.editTask.useMutation({
     onSuccess: (data) => {
       toast({ title: "Success", description: data.message });
       setIsOpen(false);
@@ -80,12 +86,103 @@ export function EditTaskModal({ taskData, isOpen, setIsOpen }: Props) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Edit task</DialogTitle>
-        </DialogHeader>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetContent className="w-full overflow-y-auto sm:w-[740px]">
+        <SheetHeader>
+          <SheetTitle>Edit task</SheetTitle>
+          <SheetDescription>
+            Edit task details and assign it to members
+          </SheetDescription>
+        </SheetHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
+          {/* Project Selection */}
+          <div className="grid grid-cols-1 items-center gap-4">
+            <Label htmlFor="projectId" className="text-start">
+              Project
+            </Label>
+            {!isLoading ? (
+              <Controller
+                name="projectId"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Select
+                      defaultValue={field.value}
+                      {...field}
+                      onValueChange={setValue.bind(null, "projectId")}
+                      className={cn(
+                        fieldState.error &&
+                          "border-red-500 focus-visible:ring-red-500",
+                      )}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a project" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Projects</SelectLabel>
+                          {projects?.result.map((project) => (
+                            <SelectItem value={project.id} key={project.id}>
+                              {project.title}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    {fieldState.error && (
+                      <span className="col-span-4 text-red-500">
+                        {fieldState.error.message}
+                      </span>
+                    )}
+                  </>
+                )}
+              />
+            ) : (
+              <Skeleton className="min-h-10 w-full" />
+            )}
+          </div>
+
+          {/* Replace single assignee with MultiSelect */}
+          <div className="grid grid-cols-1 items-center gap-4">
+            <Label htmlFor="assigneeIds" className="text-start">
+              Assigned To (Optional)
+            </Label>
+            {!isLoading ? (
+              <Controller
+                name="assigneeIds"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <>
+                    <MultiSelect
+                      options={
+                        users?.result.map((user) => ({
+                          label: `${user.firstName} ${user.lastName}`,
+                          value: user.id,
+                        })) || []
+                      }
+                      onValueChange={(val) => setValue("assigneeIds", val)}
+                      defaultValue={field.value}
+                      placeholder="Select assignees"
+                      maxCount={3}
+                      className={cn(
+                        "w-full",
+                        fieldState.error &&
+                          "border-red-500 focus-visible:ring-red-500",
+                      )}
+                    />
+                    {fieldState.error && (
+                      <span className="col-span-4 text-red-500">
+                        {fieldState.error.message}
+                      </span>
+                    )}
+                  </>
+                )}
+              />
+            ) : (
+              <Skeleton className="min-h-10 w-full" />
+            )}
+          </div>
+
           <>
             <Controller
               name="id"
@@ -177,48 +274,7 @@ export function EditTaskModal({ taskData, isOpen, setIsOpen }: Props) {
                 )}
               />
             </div>
-            <div className="grid grid-cols-1 items-center gap-4">
-              <Label htmlFor="userId" className="text-start">
-                Assigned To
-              </Label>
-              {!isLoading ? (
-                <Controller
-                  name="userId"
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <Select
-                        {...field}
-                        onValueChange={(val: IEditTaskSchema["userId"]) =>
-                          setValue("userId", val)
-                        }
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select an assignee" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>User</SelectLabel>
-                            {data?.result.map((user) => (
-                              <SelectItem value={user.id} key={user.id}>
-                                {user.firstName} {user.lastName}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                      {fieldState.error && (
-                        <span className="col-span-4 text-red-500">
-                          {fieldState.error.message}
-                        </span>
-                      )}
-                    </>
-                  )}
-                />
-              ) : (
-                <Skeleton className="min-h-10 w-full" />
-              )}
-            </div>
+
             <div className="grid grid-cols-1 items-center gap-4">
               <Label htmlFor="deadline" className="text-start">
                 Deadline
@@ -304,13 +360,67 @@ export function EditTaskModal({ taskData, isOpen, setIsOpen }: Props) {
               />
             </div>
           </>
-          <DialogFooter>
-            <Button type="submit" disabled={isPending}>
+          <div className="grid grid-cols-1 items-center gap-4">
+            <Label htmlFor="estimatedHours" className="text-start">
+              Estimated Hours
+            </Label>
+            <Controller
+              name="estimatedHours"
+              control={control}
+              render={({ field, fieldState }) => (
+                <>
+                  <Input
+                    id="estimatedHours"
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    {...field}
+                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    className="col-span-3"
+                  />
+                  {fieldState.error && (
+                    <span className="col-span-4 text-red-500">
+                      {fieldState.error.message}
+                    </span>
+                  )}
+                </>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-1 items-center gap-4">
+            <Label htmlFor="actualHours" className="text-start">
+              Actual Hours
+            </Label>
+            <Controller
+              name="actualHours"
+              control={control}
+              render={({ field, fieldState }) => (
+                <>
+                  <Input
+                    id="actualHours"
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    {...field}
+                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    className="col-span-3"
+                  />
+                  {fieldState.error && (
+                    <span className="col-span-4 text-red-500">
+                      {fieldState.error.message}
+                    </span>
+                  )}
+                </>
+              )}
+            />
+          </div>
+          <SheetFooter>
+            <Button type="submit" disabled={isPending} className="w-full">
               {isPending ? <Spinner /> : "Save changes"}
             </Button>
-          </DialogFooter>
+          </SheetFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { ArrowLeft, CalendarIcon, ClockIcon, FlagIcon, UserIcon } from "lucide-react";
+import { ArrowLeft, CalendarIcon, ClockIcon, FlagIcon, UserIcon, ClipboardIcon, ClockIcon as TimeIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/server";
@@ -22,19 +22,20 @@ export default async function Page({ params }: Props) {
 
   if (!task) return redirect("/dashboard");
   const {
-    assignedId,
+    assignees,
     createdAt,
-    assigned,
     deadline,
     description,
     id: taskId,
     priority,
     status,
     title,
+    project,
+    estimatedHours,
+    actualHours
   } = task;
 
   const currentStatus = statuses.find((cur) => cur.value === status)!;
-
   const curPriority = priorities.find((item) => item.value === priority)!;
 
   return (
@@ -56,7 +57,10 @@ export default async function Page({ params }: Props) {
                 deadline,
                 priority,
                 status,
-                userId: assignedId,
+                assigneeIds: assignees.map(a => a.id),
+                projectId: project.id,
+                estimatedHours,
+                actualHours
               }}
             />
           </div>
@@ -82,6 +86,11 @@ export default async function Page({ params }: Props) {
           <h4 className="text-lg font-semibold mb-4">Task Details</h4>
 
           <div className="space-y-6 border-b pb-6">
+            <SidebarItem
+              title={"Project"}
+              description={project.title}
+              icon={<ClipboardIcon className="h-5 w-5 text-gray-500" />}
+            />
             <SidebarItem
               title={"Date started"}
               description={format(new Date(createdAt), "MMMM dd, yyyy")}
@@ -115,24 +124,38 @@ export default async function Page({ params }: Props) {
             />
           </div>
 
-          <SidebarItem
-            title={"Assignee"}
-            description={
-              <div className="flex items-center gap-x-2">
-                <Avatar className="border-2 border-gray-100">
-                  <AvatarFallback className="h-9 w-9 bg-primary/10 uppercase text-primary">
-                    {assigned.firstName[0]}
-                    {assigned.lastName[0]}
-                  </AvatarFallback>
-                </Avatar>
-                <h5 className="text-base font-medium">
-                  {assigned.firstName}&nbsp;
-                  {assigned.lastName}
-                </h5>
-              </div>
-            }
-            icon={<UserIcon className="h-5 w-5 text-gray-500" />}
-          />
+          <div className="space-y-6 border-b pb-6">
+            <SidebarItem
+              title={"Estimated Hours"}
+              description={`${estimatedHours} hours`}
+              icon={<TimeIcon className="h-5 w-5 text-gray-500" />}
+            />
+            <SidebarItem
+              title={"Actual Hours"}
+              description={`${actualHours ?? 0} hours`}
+              icon={<TimeIcon className="h-5 w-5 text-gray-500" />}
+            />
+          </div>
+
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium text-gray-500">Assignees</h4>
+            <div className="flex flex-wrap gap-4">
+              {assignees.map((assignee) => (
+                <div key={assignee.id} className="flex items-center gap-x-2">
+                  <Avatar className="border-2 border-gray-100">
+                    <AvatarFallback className="h-9 w-9 bg-primary/10 uppercase text-primary">
+                      {assignee.firstName[0]}
+                      {assignee.lastName[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <h5 className="text-base font-medium">
+                    {assignee.firstName}&nbsp;
+                    {assignee.lastName}
+                  </h5>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { columns } from "./components/columnts";
 
-import { DataTable } from "./components/data-table";
 import { api } from "~/trpc/server";
+import { TaskTable } from "./components/TaskTable";
 export const metadata: Metadata = {
   title: "Tasks",
   description: "A task and issue tracker build using Tanstack Table.",
@@ -21,9 +20,11 @@ export default async function TaskPage() {
               Here&apos;s a list of your tasks for this month!
             </p>
           </div>
-          <div className="flex items-center space-x-2">{/* <UserNav /> */}</div>
         </div>
-        <DataTable data={tasks.data} columns={columns} />
+        <div className="flex items-center space-x-2">
+          <TaskTable tasks={tasks.data} />
+          {/* <UserNav /> */}
+        </div>
       </div>
     </>
   );
