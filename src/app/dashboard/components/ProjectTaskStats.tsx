@@ -3,10 +3,25 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Bar } from "react-chartjs-2";
 import { api } from "~/trpc/react";
-
+import { Skeleton } from "~/components/ui/skeleton";
 
 export function ProjectTaskStats() {
-  const { data: projects } = api.projects.getProjectsWithTaskCount.useQuery();
+  const { data: projects, isLoading } = api.projects.getProjectsWithTaskCount.useQuery();
+
+  if (isLoading) {
+    return (
+      <Card className="col-span-1">
+        <CardHeader>
+          <CardTitle>Project Tasks</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[300px] w-full flex items-center justify-center">
+            <Skeleton className="h-[250px] w-full" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const projectTaskData = {
     labels: projects?.result?.map((project) => project.title) ?? [],

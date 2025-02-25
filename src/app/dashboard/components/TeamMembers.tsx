@@ -2,9 +2,31 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { api } from "~/trpc/react";
+import { Skeleton } from "~/components/ui/skeleton";
 
 export function TeamMembers() {
-  const { data: users } = api.users.getUsersWithTaskCount.useQuery();
+  const { data: users, isLoading } = api.users.getUsersWithTaskCount.useQuery();
+
+  if (isLoading) {
+    return (
+      <Card className="col-span-1">
+        <CardHeader>
+          <CardTitle>Team Members</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {[...Array(3)].map((_, index) => (
+              <div key={index} className="rounded-lg border p-4">
+                <Skeleton className="h-5 w-40" />
+                <Skeleton className="mt-2 h-4 w-24" />
+                <Skeleton className="mt-2 h-4 w-32" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="col-span-1">

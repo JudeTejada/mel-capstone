@@ -3,9 +3,33 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { api } from "~/trpc/react";
+import { Skeleton } from "~/components/ui/skeleton";
 
 export function RecentTasksList() {
-  const { data: recentTasks } = api.tasks.getRecentTasks.useQuery();
+  const { data: recentTasks, isLoading } = api.tasks.getRecentTasks.useQuery();
+
+  if (isLoading) {
+    return (
+      <Card className="col-span-2">
+        <CardHeader>
+          <CardTitle>Recent Tasks</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {[...Array(3)].map((_, index) => (
+              <div key={index} className="flex items-center justify-between rounded-lg border p-4">
+                <div>
+                  <Skeleton className="h-5 w-48" />
+                  <Skeleton className="mt-2 h-4 w-32" />
+                </div>
+                <Skeleton className="h-6 w-24" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="col-span-2">
