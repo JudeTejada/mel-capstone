@@ -4,7 +4,7 @@ import { DashboardContent } from "./components/DashboardContent";
 
 export default function Page() {
   return (
-    <div className="flex w-full flex-col gap-y-4 px-4 md:px-0">
+    <div className="flex w-full flex-col gap-y-4 md:px-0">
       <Suspense
         fallback={
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -13,7 +13,7 @@ export default function Page() {
             <Skeleton className="h-[300px] w-full" />
           </div>
         }
-      > 
+      >
         <DashboardContent />
       </Suspense>
     </div>

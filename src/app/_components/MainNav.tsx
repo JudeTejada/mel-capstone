@@ -12,7 +12,6 @@ export function MainNav({
   user,
   ...props
 }: React.HTMLAttributes<HTMLElement> & { user: Session }) {
-  const isAdminUser = user.user.role === "ADMIN";
 
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -20,31 +19,17 @@ export function MainNav({
       className={cn("flex items-center space-x-4 lg:space-x-6", className)}
       {...props}
     >
-      <Link
-        href="/dashboard"
-        className="text-sm font-medium transition-colors hover:text-primary"
-      >
-        Dashboard
+      <Link href="/" className="flex items-center space-x-2">
+        <h3 className="text-xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+          TaskFlow  
+        </h3>
       </Link>
-      <Link
-        href="/dashboard/tasks"
-        className="text-sm font-medium transition-colors hover:text-primary"
-      >
-        Tasks
-      </Link>
-      {isAdminUser && (
-        <Link
-          href="/dashboard/members"
-          className="text-sm font-medium transition-colors hover:text-primary"
-        >
-          Members
-        </Link>
-      )}
-      <AddTaskModal isOpen={isOpen} setIsOpen={setIsOpen}>
+
+      {/* <AddTaskModal isOpen={isOpen} setIsOpen={setIsOpen}>
         <button className="flex items-center text-sm font-medium transition-colors hover:text-primary">
           Add Task <Plus className="text-primary" size={20} />
         </button>
-      </AddTaskModal>
+      </AddTaskModal> */}
     </nav>
   );
 }

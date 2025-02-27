@@ -42,12 +42,12 @@ export function TaskPriorityOverview() {
   };
 
   return (
-    <Card className="col-span-2">
+    <Card className="col-span-1 md:col-span-2">
       <CardHeader>
         <CardTitle>Task Priority Overview</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px] w-full">
+        <div className="h-[250px] sm:h-[300px] w-full px-2 sm:px-4">
           <Doughnut
             data={taskStatusData}
             options={{
@@ -57,8 +57,11 @@ export function TaskPriorityOverview() {
                 legend: {
                   position: "bottom",
                   labels: {
-                    padding: 20,
+                    padding: 16,
                     usePointStyle: true,
+                    font: {
+                      size: 12,
+                    },
                   },
                 },
                 tooltip: {

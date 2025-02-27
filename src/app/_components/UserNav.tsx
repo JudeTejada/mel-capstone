@@ -1,6 +1,7 @@
 "use client";
 import type { Session } from "next-auth";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
@@ -20,6 +21,9 @@ export function UserNav({ user }: Props) {
   const {
     user: { firstName, lastName, email },
   } = user;
+
+  const isAdminUser = user.user.role === "ADMIN";
+
 
   return (
     <DropdownMenu>
@@ -44,6 +48,33 @@ export function UserNav({ user }: Props) {
             </p>
           </div>
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <Link
+          href="/dashboard"
+          className="text-sm font-medium transition-colors hover:text-primary"
+        >
+          <DropdownMenuItem>
+            Dashboard
+          </DropdownMenuItem>
+        </Link>
+        <Link
+          href="/dashboard/tasks"
+          className="text-sm font-medium transition-colors hover:text-primary"
+        >
+          <DropdownMenuItem>
+            Tasks
+          </DropdownMenuItem>
+        </Link>
+        {isAdminUser && (
+          <Link
+            href="/dashboard/members"
+            className="text-sm font-medium transition-colors hover:text-primary"
+          >
+            <DropdownMenuItem>
+              Members
+            </DropdownMenuItem>
+          </Link>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onSelect={async () => {

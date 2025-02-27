@@ -34,12 +34,12 @@ export function TeamMembers() {
         <CardTitle>Team Members</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {users?.result?.map((user) => (
-            <div key={user.id} className="rounded-lg border p-4">
-              <h4 className="font-semibold">{user.firstName} {user.lastName}</h4>
-              <p className="text-sm text-gray-500">{user.position}</p>
-              <p className="text-sm text-gray-500">{user.taskCount} tasks assigned</p>
+            <div key={user.id} className="rounded-lg border p-3 sm:p-4">
+              <h4 className="font-semibold text-sm sm:text-base">{user.firstName} {user.lastName}</h4>
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">{user.position}</p>
+              <p className="text-xs sm:text-sm text-gray-500">{user.taskCount} tasks assigned</p>
             </div>
           ))}
         </div>

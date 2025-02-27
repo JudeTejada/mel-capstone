@@ -289,12 +289,12 @@ export function ProjectsOverview() {
         </Dialog>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects?.result.map((project) => (
             <Card key={project.id}>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-semibold">{project.title}</h3>
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                  <h3 className="font-semibold text-base sm:text-lg">{project.title}</h3>
                   <div className="flex items-center gap-2">
                     <span
                       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${project.priority === "HIGH" ? "bg-red-100 text-red-800" : project.priority === "MEDIUM" ? "bg-yellow-100 text-yellow-800" : "bg-green-100 text-green-800"}`}
@@ -309,21 +309,19 @@ export function ProjectsOverview() {
                     </span>
                   </div>
                 </div>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {project.description}
-                </p>
+                <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{project.description}</p>
                 <div className="mt-4 space-y-2">
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm gap-1 sm:gap-0">
                     <span className="text-muted-foreground">Timeline:</span>
-                    <span>
+                    <span className="text-xs sm:text-sm">
                       {new Date(project.startDate).toLocaleDateString()} -{" "}
                       {new Date(project.endDate).toLocaleDateString()}
                     </span>
                   </div>
                   {project.budget && (
-                    <div className="flex items-center justify-between text-sm">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm gap-1 sm:gap-0">
                       <span className="text-muted-foreground">Budget:</span>
-                      <span>PHP{project.budget.toLocaleString()}</span>
+                      <span className="text-xs sm:text-sm">PHP{project.budget.toLocaleString()}</span>
                     </div>
                   )}
                 </div>

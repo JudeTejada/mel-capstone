@@ -43,7 +43,7 @@ export function ProjectTaskStats() {
         <CardTitle>Project Tasks</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px] w-full">
+        <div className="h-[250px] sm:h-[300px] w-full px-2 sm:px-4">
           <Bar
             data={projectTaskData}
             options={{
@@ -54,6 +54,18 @@ export function ProjectTaskStats() {
                   beginAtZero: true,
                   ticks: {
                     stepSize: 1,
+                    font: {
+                      size: 10,
+                    },
+                  },
+                },
+                x: {
+                  ticks: {
+                    font: {
+                      size: 10,
+                    },
+                    maxRotation: 45,
+                    minRotation: 45,
                   },
                 },
               },
@@ -62,5 +74,5 @@ export function ProjectTaskStats() {
         </div>
       </CardContent>
     </Card>
-  );
+);
 }
