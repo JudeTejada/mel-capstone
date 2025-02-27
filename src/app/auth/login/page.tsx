@@ -55,10 +55,15 @@ export default function Page() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+            Sign in to your account
+          </h2>
           <p className="mt-2 text-sm text-gray-600">
             Or{" "}
-            <Link href="/auth/signup" className="font-medium text-primary hover:text-primary/90">
+            <Link
+              href="/auth/signup"
+              className="font-medium text-primary hover:text-primary/90"
+            >
               create a new account
             </Link>
           </p>
@@ -130,10 +135,10 @@ export default function Page() {
 
             <div className="space-y-4">
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? <Spinner  /> : null}
+                {isLoading ? <Spinner /> : null}
                 {isLoading ? "Signing in..." : "Sign in with Email"}
               </Button>
-
+              {/*
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t" />
@@ -141,9 +146,9 @@ export default function Page() {
                 <div className="relative flex justify-center text-xs uppercase">
                   <span className="bg-white px-2 text-muted-foreground">Or continue with</span>
                 </div>
-              </div>
-{/*
-              <Button
+              </div> */}
+
+              {/* <Button
                 type="button"
                 variant="outline"
                 className="w-full"

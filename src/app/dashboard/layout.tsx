@@ -13,7 +13,7 @@ export default async function Page({ children }: PropsWithChildren) {
       <div className="border-b">
         <div className="mx-auto md:container">
           <div className="flex h-16 items-center px-4">
-            <MainNav className="mx-6" user={user} />
+            <MainNav user={user} />
             <div className="ml-auto flex items-center space-x-4">
               <UserNav user={user} />
             </div>
