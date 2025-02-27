@@ -58,7 +58,7 @@ type TaskTableProps = {
   tasks: Task[];
 };
 
-const formatStatus = (status: Status): string => {
+export const formatStatus = (status: Status): string => {
   switch (status) {
     case "INPROGRESS":
       return "In Progress";

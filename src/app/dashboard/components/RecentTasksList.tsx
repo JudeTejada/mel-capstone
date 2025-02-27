@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { api } from "~/trpc/react";
 import { Skeleton } from "~/components/ui/skeleton";
+import { formatStatus } from "../tasks/components/TaskTable";
 
 export function RecentTasksList() {
   const { data: recentTasks, isLoading } = api.tasks.getRecentTasks.useQuery();
@@ -37,7 +38,7 @@ export function RecentTasksList() {
         <CardTitle>Recent Tasks</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="flex flex-col space-y-4">
           {recentTasks?.data?.map((task) => (
             <Link href={`/dashboard/tasks/${task.id}`} key={task.id}>
               <div className="flex items-center justify-between rounded-lg border p-4">
@@ -50,7 +51,7 @@ export function RecentTasksList() {
                 <span
                   className={`rounded-full px-3 py-1 text-sm ${task.status === "TODO" ? "bg-yellow-100 text-yellow-600" : task.status === "INPROGRESS" ? "bg-blue-100 text-blue-600" : "bg-green-100 text-green-600"}`}
                 >
-                  {task.status}
+                  {formatStatus(task.status)}
                 </span>
               </div>
             </Link>

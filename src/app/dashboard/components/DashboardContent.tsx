@@ -67,12 +67,12 @@ export function DashboardContent() {
               <CardContent className="flex flex-col items-center justify-center p-6">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <span className="inline-block h-3 w-3 rounded-full bg-yellow-500" />
-                  <span>Unassigned</span>
+                  <span>To Do</span>
                 </div>
                 <div className="mt-2 text-3xl font-bold">
                   {taskStats?.data.todo ?? 0}
                 </div>
-                <div className="text-sm text-muted-foreground">Tasks</div>
+                <div className="text-sm text-muted-foreground">Tasks in to do</div>
               </CardContent>
             </Card>
 

@@ -43,8 +43,8 @@ export const usersRouter = createTRPCRouter({
               deadline: true,
             },
             orderBy: {
-              deadline: 'asc'
-            }
+              deadline: "asc",
+            },
           },
           _count: {
             select: {
@@ -55,7 +55,7 @@ export const usersRouter = createTRPCRouter({
       });
 
       if (!user) {
-        throw new Error('User not found');
+        throw new Error("User not found");
       }
 
       return {
@@ -70,6 +70,7 @@ export const usersRouter = createTRPCRouter({
           not: ctx.session.user.id,
         },
       },
+      take: 5,
       select: {
         position: true,
         id: true,
