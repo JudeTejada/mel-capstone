@@ -48,7 +48,7 @@ export function EditProfileDialog({ isOpen, setIsOpen, userData }: Props) {
     defaultValues: {
       firstName: userData.firstName,
       lastName: userData.lastName,
-      position: userData.position || "",
+      position: userData.position ?? "",
     },
   });
 
