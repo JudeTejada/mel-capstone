@@ -18,14 +18,12 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { useState } from "react";
 import { useToast } from "~/components/ui/use-toast";
-
-import type { Metadata } from "next";
+import type { User } from "@prisma/client";
 
 export default function MembersPage() {
   const { data, refetch } = api.users.getAllUsers.useQuery();
@@ -48,11 +46,11 @@ export default function MembersPage() {
     },
   });
 
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleEditUser = (e) => {
+  const handleEditUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     updateUser({
