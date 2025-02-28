@@ -1,6 +1,6 @@
 "use client";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { Menu, Plus } from "lucide-react";
+import { Menu, Plus, UserCog } from "lucide-react";
 import type { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
@@ -17,16 +17,18 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { AddTaskModal } from "./AddTaskModal";
+import { EditProfileDialog } from "./EditProfileDialog";
 
 type Props = {
   user: Session;
 };
 export function UserNav({ user }: Props) {
   const {
-    user: { firstName, lastName, email },
+    user: { firstName, lastName, email, id },
   } = user;
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const isAdminUser = user.user.role === "ADMIN";
 
   return (
@@ -37,6 +39,16 @@ export function UserNav({ user }: Props) {
           {lastName[0]}
         </AvatarFallback>
       </Avatar> */}
+      <EditProfileDialog 
+        isOpen={isEditProfileOpen} 
+        setIsOpen={setIsEditProfileOpen} 
+        userData={{
+          id,
+          firstName,
+          lastName,
+          position: user.user.position,
+        }}
+      />
       <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
         <DropdownMenuTrigger>
           <Menu className="text-black" />
@@ -56,9 +68,11 @@ export function UserNav({ user }: Props) {
             onClick={(e) => {
               e.preventDefault();
               setIsDropdownOpen(false);
+              setIsEditProfileOpen(true);
             }}
           >
-
+            <UserCog className="mr-2 h-4 w-4" />
+            Edit Profile
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <Link

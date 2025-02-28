@@ -94,4 +94,36 @@ export const usersRouter = createTRPCRouter({
       })),
     };
   }),
+  
+  // Add the updateProfile mutation
+  updateProfile: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        firstName: z.string().min(1, "First name is required"),
+        lastName: z.string().min(1, "Last name is required"),
+        position: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Ensure the user can only update their own profile
+      if (ctx.session.user.id !== input.id) {
+        throw new Error("You can only update your own profile");
+      }
+
+      const updatedUser = await ctx.db.user.update({
+        where: { id: input.id },
+        data: {
+          firstName: input.firstName,
+          lastName: input.lastName,
+          position: input.position,
+        },
+      });
+
+      return {
+        status: 200,
+        message: "Profile updated successfully",
+        user: updatedUser,
+      };
+    }),
 });
