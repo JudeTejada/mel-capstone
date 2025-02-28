@@ -47,35 +47,62 @@ export function TaskPriorityOverview() {
         <CardTitle>Task Priority Overview</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[250px] sm:h-[300px] w-full px-2 sm:px-4">
-          <Doughnut
-            data={taskStatusData}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  position: "bottom",
-                  labels: {
-                    padding: 16,
-                    usePointStyle: true,
-                    font: {
-                      size: 12,
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="h-[250px] sm:h-[300px] w-full px-2 sm:px-4">
+            <Doughnut
+              data={taskStatusData}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    position: "bottom",
+                    labels: {
+                      padding: 16,
+                      usePointStyle: true,
+                      font: {
+                        size: 12,
+                      },
+                    },
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        const label = context.label || "";
+                        const value = typeof context.raw === "number" ? context.raw : 0;
+                        const total = context.dataset.data.reduce((acc: number, curr: number) => acc + curr, 0);
+                        const percentage = ((value / total) * 100).toFixed(1);
+                        return `${label}: ${value} tasks (${percentage}%)`;
+                      },
                     },
                   },
                 },
-                tooltip: {
-                  callbacks: {
-                    label: (context) => {
-                      const label = context.label || "";
-                      const value = typeof context.raw === "number" ? context.raw : 0;
-                      return `${label}: ${value} tasks`;
-                    },
-                  },
-                },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
+          <div className="flex flex-col justify-center space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="h-3 w-3 rounded-full bg-[#94a3b8]" />
+                <span>Low Priority</span>
+              </div>
+              <span className="font-bold">{mainTasks?.data.low ?? 0} tasks</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="h-3 w-3 rounded-full bg-[#3b82f6]" />
+                <span>Medium Priority</span>
+              </div>
+              <span className="font-bold">{mainTasks?.data.medium ?? 0} tasks</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="h-3 w-3 rounded-full bg-[#22c55e]" />
+                <span>High Priority</span>
+              </div>
+              <span className="font-bold">{mainTasks?.data.high ?? 0} tasks</span>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
