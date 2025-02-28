@@ -24,7 +24,14 @@ export function MainNav({
           Dashboard
         </h3>
       </Link>
-
+      <div className="hidden items-center space-x-6 md:flex">
+        <Link
+          href="/dashboard/tasks"
+          className="text-sm font-medium transition-colors hover:text-primary"
+        >
+          Tasks
+        </Link>
+      </div>
       <AddTaskModal isOpen={isOpen} setIsOpen={setIsOpen}>
         <Button
           variant="ghost"

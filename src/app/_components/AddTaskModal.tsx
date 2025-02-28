@@ -73,7 +73,15 @@ export function AddTaskModal({ children, isOpen, setIsOpen }: Props) {
 
       reset();
     },
+    onError:(error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },  
   });
+
 
   const onSubmit: SubmitHandler<ITaskSchema> = (data) => {
     mutate(data);

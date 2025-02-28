@@ -22,6 +22,10 @@ export const tasksRouter = createTRPCRouter({
           assignees: {
             connect: input.assigneeIds?.map((id) => ({ id })) ?? [],
           },
+          projectId: input.projectId,
+          deadline: input.deadline ? new Date(input.deadline) : null,
+          priority: input.priority,
+          estimatedHours: input.estimatedHours ?? 0,
           actualHours: input.actualHours ?? 0,
         },
       });
@@ -45,6 +49,10 @@ export const tasksRouter = createTRPCRouter({
             set: input.assigneeIds?.map((id) => ({ id })) ?? [],
           },
           actualHours: input.actualHours ?? 0,
+          projectId: input.projectId,
+          deadline: input.deadline ? new Date(input.deadline) : null,
+          priority: input.priority,
+          estimatedHours: input.estimatedHours ?? 0,
         },
       });
 
@@ -97,7 +105,7 @@ export const tasksRouter = createTRPCRouter({
           deadline: true,
           priority: true,
           createdAt: true,
-          actualHours:true,
+          actualHours: true,
           description: true,
           estimatedHours: true,
           project: {
@@ -266,8 +274,8 @@ export const tasksRouter = createTRPCRouter({
     });
 
     const todoCount =
-      taskCounts.find((count) => count.status === Status.TODO)?._count
-        .status ?? 0;
+      taskCounts.find((count) => count.status === Status.TODO)?._count.status ??
+      0;
     const inProgressCount =
       taskCounts.find((count) => count.status === Status.INPROGRESS)?._count
         .status ?? 0;

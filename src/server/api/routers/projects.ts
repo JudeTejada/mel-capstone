@@ -87,8 +87,15 @@ export const projectsRouter = createTRPCRouter({
     .input(
       z.object({
         title: z.string().min(1, "Title is required"),
-        description: z.string().optional(),
-        status: z.enum(["PLANNING", "ACTIVE", "ON_HOLD", "COMPLETED"]).default("ACTIVE"),
+        description: z.string(),
+        status: z
+          .enum(["PLANNING", "ACTIVE", "ON_HOLD", "COMPLETED"])
+          .default("ACTIVE"),
+        startDate: z.date(),
+        endDate: z.date(),
+        priority: z.enum(["LOW", "MEDIUM", "HIGH"]).default("MEDIUM"),
+        budget: z.number().optional(),
+        tags: z.array(z.string()).optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -97,6 +104,16 @@ export const projectsRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           status: input.status,
+          startDate: input.startDate,
+          endDate: input.endDate,
+          priority: input.priority,
+          budget: input.budget,
+          tags: input.tags,
+          owner: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
         },
       });
 
@@ -112,8 +129,13 @@ export const projectsRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         title: z.string().min(1, "Title is required"),
-        description: z.string().optional(),
-        status: z.enum(["ACTIVE", "COMPLETED", "ON_HOLD"]),
+        description: z.string(),
+        status: z.enum(["PLANNING", "ACTIVE", "ON_HOLD", "COMPLETED"]),
+        startDate: z.date(),
+        endDate: z.date(),
+        priority: z.enum(["LOW", "MEDIUM", "HIGH"]),
+        budget: z.number().optional(),
+        tags: z.array(z.string()).optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -123,6 +145,11 @@ export const projectsRouter = createTRPCRouter({
           title: input.title,
           description: input.description,
           status: input.status,
+          startDate: input.startDate,
+          endDate: input.endDate,
+          priority: input.priority,
+          budget: input.budget,
+          tags: input.tags,
         },
       });
 

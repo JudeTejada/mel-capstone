@@ -17,6 +17,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { useSession } from "next-auth/react";
 
 type Project = {
   id: string;
@@ -57,6 +58,8 @@ export function ProjectsOverview() {
     budget: null,
     tags: [],
   });
+
+  const user = useSession();
 
   const { toast } = useToast();
 
@@ -164,137 +167,149 @@ export function ProjectsOverview() {
     <Card className="col-span-3">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Projects Overview</CardTitle>
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-          <DialogTrigger asChild>
-            <Button>Create Project</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create New Project</DialogTitle>
-              <DialogDescription>
-                Add a new project to your dashboard.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, title: e.target.value }))
-                  }
-                />
+        {user.data?.user.role === "ADMIN" ? (
+          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+            <DialogTrigger asChild>
+              <Button>Create Project</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create New Project</DialogTitle>
+                <DialogDescription>
+                  Add a new project to your dashboard.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="title">Title</Label>
+                  <Input
+                    id="title"
+                    value={formData.title}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        title: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="status">Status</Label>
+                  <select
+                    id="status"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    value={formData.status}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        status: e.target.value as Project["status"],
+                      }))
+                    }
+                  >
+                    <option value="PLANNING">Planning</option>
+                    <option value="ACTIVE">Active</option>
+                    <option value="ON_HOLD">On Hold</option>
+                    <option value="COMPLETED">Completed</option>
+                  </select>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="priority">Priority</Label>
+                  <select
+                    id="priority"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    value={formData.priority}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        priority: e.target.value as Project["priority"],
+                      }))
+                    }
+                  >
+                    <option value="LOW">Low</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HIGH">High</option>
+                  </select>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="startDate">Start Date</Label>
+                  <Input
+                    id="startDate"
+                    type="date"
+                    value={formData.startDate.toISOString().split("T")[0]}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        startDate: new Date(e.target.value),
+                      }))
+                    }
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="endDate">End Date</Label>
+                  <Input
+                    id="endDate"
+                    type="date"
+                    value={formData.endDate.toISOString().split("T")[0]}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        endDate: new Date(e.target.value),
+                      }))
+                    }
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="budget">Budget</Label>
+                  <Input
+                    id="budget"
+                    type="number"
+                    value={formData.budget ?? ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        budget: e.target.value ? Number(e.target.value) : null,
+                      }))
+                    }
+                  />
+                </div>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      description: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="status">Status</Label>
-                <select
-                  id="status"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  value={formData.status}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      status: e.target.value as Project["status"],
-                    }))
-                  }
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsCreateOpen(false)}
                 >
-                  <option value="PLANNING">Planning</option>
-                  <option value="ACTIVE">Active</option>
-                  <option value="ON_HOLD">On Hold</option>
-                  <option value="COMPLETED">Completed</option>
-                </select>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="priority">Priority</Label>
-                <select
-                  id="priority"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  value={formData.priority}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      priority: e.target.value as Project["priority"],
-                    }))
-                  }
-                >
-                  <option value="LOW">Low</option>
-                  <option value="MEDIUM">Medium</option>
-                  <option value="HIGH">High</option>
-                </select>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="startDate">Start Date</Label>
-                <Input
-                  id="startDate"
-                  type="date"
-                  value={formData.startDate.toISOString().split("T")[0]}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      startDate: new Date(e.target.value),
-                    }))
-                  }
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="endDate">End Date</Label>
-                <Input
-                  id="endDate"
-                  type="date"
-                  value={formData.endDate.toISOString().split("T")[0]}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      endDate: new Date(e.target.value),
-                    }))
-                  }
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="budget">Budget</Label>
-                <Input
-                  id="budget"
-                  type="number"
-                  value={formData.budget ?? ""}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      budget: e.target.value ? Number(e.target.value) : null,
-                    }))
-                  }
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleCreate}>Create</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+                  Cancel
+                </Button>
+                <Button onClick={handleCreate}>Create</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        ) : (
+          <div />
+        )}
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects?.result.map((project) => (
             <Card key={project.id}>
               <CardContent className="p-4 sm:p-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
-                  <h3 className="font-semibold text-base sm:text-lg">{project.title}</h3>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+                  <h3 className="text-base font-semibold sm:text-lg">
+                    {project.title}
+                  </h3>
                   <div className="flex items-center gap-2">
                     <span
                       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${project.priority === "HIGH" ? "bg-red-100 text-red-800" : project.priority === "MEDIUM" ? "bg-yellow-100 text-yellow-800" : "bg-green-100 text-green-800"}`}
@@ -309,54 +324,60 @@ export function ProjectsOverview() {
                     </span>
                   </div>
                 </div>
-                <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{project.description}</p>
+                <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+                  {project.description}
+                </p>
                 <div className="mt-4 space-y-2">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm gap-1 sm:gap-0">
+                  <div className="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-0">
                     <span className="text-muted-foreground">Timeline:</span>
                     <span className="text-xs sm:text-sm">
                       {new Date(project.startDate).toLocaleDateString()} -{" "}
                       {new Date(project.endDate).toLocaleDateString()}
                     </span>
                   </div>
-                  {project.budget && (
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm gap-1 sm:gap-0">
+                  {user.data?.user.role === "ADMIN" && project.budget && (
+                    <div className="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-0">
                       <span className="text-muted-foreground">Budget:</span>
-                      <span className="text-xs sm:text-sm">PHP{project.budget.toLocaleString()}</span>
+                      <span className="text-xs sm:text-sm">
+                        PHP{project.budget.toLocaleString()}
+                      </span>
                     </div>
                   )}
                 </div>
-                <div className="mt-4 flex justify-end gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedProject(project);
-                      setFormData({
-                        title: project.title,
-                        description: project.description,
-                        status: project.status,
-                        startDate: project.startDate,
-                        endDate: project.endDate,
-                        priority: project.priority,
-                        budget: project.budget,
-                        tags: project.tags,
-                      });
-                      setIsEditOpen(true);
-                    }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedProject(project);
-                      setIsDeleteOpen(true);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </div>
+                {user.data?.user.role === "ADMIN" && (
+                  <div className="mt-4 flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedProject(project);
+                        setFormData({
+                          title: project.title,
+                          description: project.description,
+                          status: project.status,
+                          startDate: project.startDate,
+                          endDate: project.endDate,
+                          priority: project.priority,
+                          budget: project.budget,
+                          tags: project.tags,
+                        });
+                        setIsEditOpen(true);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedProject(project);
+                        setIsDeleteOpen(true);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}

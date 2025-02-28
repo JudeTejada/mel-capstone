@@ -95,6 +95,46 @@ export const usersRouter = createTRPCRouter({
     };
   }),
   
+  deleteUser: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const deletedUser = await ctx.db.user.delete({
+        where: { id: input.id },
+      });
+
+      return {
+        status: 200,
+        message: "User deleted successfully",
+        data: deletedUser,
+      };
+    }),
+
+  updateUser: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        firstName: z.string(),
+        lastName: z.string(),
+        position: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const updatedUser = await ctx.db.user.update({
+        where: { id: input.id },
+        data: {
+          firstName: input.firstName,
+          lastName: input.lastName,
+          position: input.position,
+        },
+      });
+
+      return {
+        status: 200,
+        message: "User updated successfully",
+        data: updatedUser,
+      };
+    }),
+
   // Add the updateProfile mutation
   updateProfile: protectedProcedure
     .input(
