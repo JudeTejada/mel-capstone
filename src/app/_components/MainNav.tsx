@@ -21,7 +21,7 @@ export function MainNav({
     >
       <Link href="/" className="flex items-center space-x-2">
         <h3 className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-xl font-bold text-transparent">
-          TaskFlow
+          Dashboard
         </h3>
       </Link>
 
