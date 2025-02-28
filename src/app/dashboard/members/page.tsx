@@ -132,7 +132,7 @@ export default function MembersPage() {
             <DialogHeader>
               <DialogTitle>Edit User Details</DialogTitle>
               <DialogDescription>
-                Make changes to the user's information here.
+                Make changes to the user's information here..
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleEditUser}>
