@@ -55,7 +55,7 @@ export function EditTaskModal({ taskData, isOpen, setIsOpen }: Props) {
     resolver: zodResolver(taskSchema),
     values: {
       id: taskData.id,
-      deadline: taskData.deadline ?? null,
+      deadline: taskData.deadline ? new Date(taskData.deadline).toDateString() : null,
       description: taskData.description ?? "",
       priority: taskData.priority ?? undefined,
       title: taskData.title ?? "",

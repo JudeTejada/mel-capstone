@@ -161,6 +161,7 @@ export const tasksRouter = createTRPCRouter({
         createdAt: "desc",
       },
       select: {
+        description: true,
         id: true,
         title: true,
         status: true,
@@ -182,7 +183,6 @@ export const tasksRouter = createTRPCRouter({
         estimatedHours: true,
         deadline: true,
         createdAt: true,
-        description: true,
       },
     });
 

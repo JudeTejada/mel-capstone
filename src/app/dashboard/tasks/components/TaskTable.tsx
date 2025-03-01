@@ -478,7 +478,7 @@ export function TaskTable({ tasks }: TaskTableProps) {
           taskData={{
             id: selectedTask.id,
             title: selectedTask.title,
-            description: "", // You'll need to add this to your Task type if needed
+            description: selectedTask.description, // You'll need to add this to your Task type if needed
             status: selectedTask.status,
             assigneeIds: selectedTask.assignees.map((a) => a.id),
             projectId: selectedTask.project.id, // You'll need to add project.id to your Task type

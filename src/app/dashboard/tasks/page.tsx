@@ -23,7 +23,6 @@ export default async function TaskPage() {
         </div>
         <div className="flex items-center space-x-2">
           <TaskTable tasks={tasks.data} />
-          {/* <UserNav /> */}
         </div>
       </div>
     </>

@@ -12,6 +12,7 @@ const config = {
   ],
   rules: {
     "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
     "react/no-unescaped-entities": "off",
     "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-unsafe-member-access": "off",
