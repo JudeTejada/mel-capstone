@@ -26,6 +26,7 @@ import { useToast } from "~/components/ui/use-toast";
 import type { User } from "@prisma/client";
 
 export default function MembersPage() {
+  console.log('test comment')
   const { data, refetch } = api.users.getAllUsers.useQuery();
   const { mutate: deleteUser } = api.users.deleteUser.useMutation({
     onSuccess: async () => {
