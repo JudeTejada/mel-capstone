@@ -60,7 +60,6 @@ export function AddTaskModal({ children, isOpen, setIsOpen }: Props) {
       },
     });
   console.log(formState.errors);
-
   const { data: projects } = api.projects.getAllProjects.useQuery();
   const { data: users, isLoading } = api.users.getAllUsers.useQuery();
 
@@ -69,7 +68,6 @@ export function AddTaskModal({ children, isOpen, setIsOpen }: Props) {
       toast({ title: "Success", description: data.message });
       setIsOpen(false);
       router.refresh();
-      revalidatePath("/dashboard/tasks");
 
       reset();
     },
@@ -79,7 +77,7 @@ export function AddTaskModal({ children, isOpen, setIsOpen }: Props) {
         description: error.message,
         variant: "destructive",
       });
-    },  
+    },
   });
 
 
