@@ -6,16 +6,19 @@ import bcrypt from "bcrypt";
 
 const SALT_ROUNDS = 10;
 
+export type RegisterInput = z.infer<typeof registerSchema>;
+
+export const registerSchema = z.object({
+  email: z.string(),
+  password: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
+  role: z.enum(["USER", "ADMIN"]),
+});
+
 export const authRouter = createTRPCRouter({
   register: publicProcedure
-    .input(
-      z.object({
-        email: z.string(),
-        password: z.string(),
-        firstName: z.string(),
-        lastName: z.string(),
-      }),
-    )
+    .input(registerSchema)
     .mutation(async ({ input, ctx }) => {
       const { email, password, firstName, lastName } = input;
 

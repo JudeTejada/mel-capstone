@@ -49,7 +49,10 @@ export default function Page() {
   });
 
   const onSubmit: SubmitHandler<ISignupForm> = (data) => {
-    mutate(data);
+    mutate({
+      ...data,
+      role: "USER" // Set default role for regular signup
+    });
   };
 
   return (
