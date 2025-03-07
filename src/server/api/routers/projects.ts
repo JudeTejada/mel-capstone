@@ -163,6 +163,12 @@ export const projectsRouter = createTRPCRouter({
   deleteProject: protectedProcedure
     .input(z.string())
     .mutation(async ({ input, ctx }) => {
+      // First, delete all tasks associated with the project
+      await ctx.db.task.deleteMany({
+        where: { projectId: input },
+      });
+
+      // Then delete the project
       await ctx.db.project.delete({
         where: { id: input },
       });
