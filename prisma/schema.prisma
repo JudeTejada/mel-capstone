@@ -57,15 +57,16 @@ model User {
     email     String? @unique
     position  String  @default("")
 
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    role          Role      @default(USER)
-    password      String
-    tasks         Task[]    @relation("TaskAssignees")
-    ownedProjects Project[] @relation("ProjectOwner")
-    Comment       Comment[]
+    emailVerified   DateTime?
+    image           String?
+    accounts        Account[]
+    sessions        Session[]
+    role            Role      @default(USER)
+    password        String
+    tasks           Task[]    @relation("TaskAssignees")
+    ownedProjects   Project[] @relation("ProjectOwner")
+    Comment         Comment[]
+    assignedTickets Ticket[]  @relation("TicketAssignee")
 }
 
 enum Role {
@@ -74,6 +75,12 @@ enum Role {
 }
 
 enum Status {
+    TODO
+    INPROGRESS
+    COMPLETED
+}
+
+enum TaskStatus {
     BACKLOG
     TODO
     INPROGRESS
@@ -91,6 +98,17 @@ enum ProjectStatus {
     ACTIVE
     ON_HOLD
     COMPLETED
+}
+
+enum TicketType {
+    INSTALLATION
+    RECTIFICATION
+}
+
+enum ProgressStatus {
+    IN_PROGRESS
+    DONE
+    ON_HOLD
 }
 
 model Project {
@@ -112,18 +130,18 @@ model Project {
 }
 
 model Task {
-    id             String    @id @default(cuid())
-    createdAt      DateTime  @default(now())
+    id             String     @id @default(cuid())
+    createdAt      DateTime   @default(now())
     title          String
     description    String
-    status         Status    @default(BACKLOG)
-    assignees      User[]    @relation("TaskAssignees")
-    project        Project   @relation(fields: [projectId], references: [id])
+    status         TaskStatus @default(BACKLOG)
+    assignees      User[]     @relation("TaskAssignees")
+    project        Project    @relation(fields: [projectId], references: [id])
     projectId      String
     deadline       DateTime
     priority       Priority
     estimatedHours Float
-    actualHours    Float     @default(0)
+    actualHours    Float      @default(0)
     comments       Comment[]
 
     @@index([projectId])
@@ -140,4 +158,37 @@ model Comment {
 
     @@index([userId])
     @@index([taskId])
+}
+
+model Ticket {
+    id            String         @id @default(cuid())
+    type          TicketType
+    status        ProgressStatus @default(IN_PROGRESS)
+    dateCompleted DateTime?
+    remarks       String?        @db.Text
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @updatedAt
+    assignedTo    User?          @relation("TicketAssignee", fields: [userId], references: [id])
+    userId        String?
+
+    // Activity details
+    installationProgress InstallationProgress?
+    activityType         String?               @db.VarChar(100)
+
+    @@index([userId, status, type])
+    @@index([dateCompleted])
+}
+
+model InstallationProgress {
+    id             String   @id @default(cuid())
+    ticket         Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+    ticketId       String   @unique
+    poleExcavation Float    @default(0)
+    cableLaid      Float    @default(0)
+    napLcpMounted  Float    @default(0)
+    poleErected    Float    @default(0)
+    cableFixed     Float    @default(0)
+    napLcpSpliced  Float    @default(0)
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
 }

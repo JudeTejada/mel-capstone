@@ -32,6 +32,15 @@ export function MainNav({
           Tasks
         </Link>
       </div>
+
+      <div className="hidden items-center space-x-6 md:flex">
+        <Link
+          href="/dashboard/tickets"
+          className="text-sm font-medium transition-colors hover:text-primary"
+        >
+          Tickets
+        </Link>
+      </div>
       <AddTaskModal isOpen={isOpen} setIsOpen={setIsOpen}>
         <Button
           variant="ghost"
