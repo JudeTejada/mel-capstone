@@ -69,9 +69,6 @@ interface TicketTableProps {
 export function TicketTable({ tickets }: TicketTableProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<ProgressStatus | "ALL">(
-    "ALL",
-  );
   const [assigneeFilter, setAssigneeFilter] = useState<string>("ALL");
   const [selectedType, setSelectedType] = useState<
     "INSTALLATION" | "RECTIFICATION"
@@ -163,8 +160,7 @@ export function TicketTable({ tickets }: TicketTableProps) {
 
   const filteredTickets = tickets.filter((ticket) => {
     const matchesType = ticket.type === selectedType;
-    const matchesStatus =
-      statusFilter === "ALL" || ticket.status === statusFilter;
+
     const matchesAssignee =
       assigneeFilter === "ALL" ||
       (ticket.assignedTo &&
@@ -185,7 +181,7 @@ export function TicketTable({ tickets }: TicketTableProps) {
       (ticket.remarks?.toLowerCase().includes(searchQuery.toLowerCase()) ??
         false);
 
-    return matchesType && matchesStatus && matchesAssignee && matchesSearch;
+    return matchesType && matchesAssignee && matchesSearch;
   });
 
   return (
@@ -226,23 +222,6 @@ export function TicketTable({ tickets }: TicketTableProps) {
           className="max-w-md"
           data-testid="ticket-filter"
         />
-
-        <Select
-          value={statusFilter}
-          onValueChange={(value: ProgressStatus | "ALL") =>
-            setStatusFilter(value)
-          }
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ALL">All Statuses</SelectItem>
-            <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-            <SelectItem value="DONE">Done</SelectItem>
-            <SelectItem value="ON_HOLD">On Hold</SelectItem>
-          </SelectContent>
-        </Select>
 
         <Select value={assigneeFilter} onValueChange={setAssigneeFilter}>
           <SelectTrigger className="w-[180px]">
