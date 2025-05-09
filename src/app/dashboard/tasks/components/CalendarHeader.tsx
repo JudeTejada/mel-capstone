@@ -23,26 +23,7 @@ export function CalendarHeader({
 }: CalendarHeaderProps) {
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <Button
-          variant={view === "month" ? "default" : "outline"}
-          onClick={() => onViewChange("month")}
-        >
-          Month
-        </Button>
-        <Button
-          variant={view === "week" ? "default" : "outline"}
-          onClick={() => onViewChange("week")}
-        >
-          Week
-        </Button>
-        <Button
-          variant={view === "day" ? "default" : "outline"}
-          onClick={() => onViewChange("day")}
-        >
-          Day
-        </Button>
-      </div>
+
       <div className="flex items-center gap-2">
         <Select onValueChange={(value) => onFilterChange("status", value)}>
           <SelectTrigger className="w-[180px]">

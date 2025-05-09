@@ -67,7 +67,6 @@ export function CalendarTaskCard({ task }: CalendarTaskCardProps) {
         <TooltipContent>
           <div className="space-y-1">
             <p className="font-semibold">{task.title}</p>
-            <p className="text-sm text-muted-foreground">{task.description}</p>
             <div className="flex gap-2">
               <Badge variant="outline">{task.priority}</Badge>
               <Badge variant="outline">{task.status}</Badge>
