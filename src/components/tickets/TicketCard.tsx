@@ -1,9 +1,8 @@
-
 "use client";
-  import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Progress } from "~/components/ui/progress";
-import { Ticket } from "@prisma/client";
+import type { Ticket } from "@prisma/client";
 import { format } from "date-fns";
 import Link from "next/link";
 

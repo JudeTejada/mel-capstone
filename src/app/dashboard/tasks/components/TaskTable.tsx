@@ -20,7 +20,6 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import type { Status } from "@prisma/client";
 import { format } from "date-fns";
 import { Button } from "~/components/ui/button";
 import { AddTaskModal } from "~/app/_components/AddTaskModal";
@@ -36,9 +35,12 @@ import {
 } from "~/components/ui/sheet";
 import { Filter } from "lucide-react";
 
+type Status = "TODO" | "INPROGRESS" | "COMPLETED" | "BACKLOG";
+
 type Task = {
   id: string;
   title: string;
+  description: string;
   assignees: {
     id: string;
     firstName: string;
@@ -46,12 +48,14 @@ type Task = {
     image: string | null;
   }[];
   project: {
+    id: string;
     title: string;
   };
   priority: "LOW" | "MEDIUM" | "HIGH";
   estimatedHours: number;
+  actualHours: number;
   status: Status;
-  deadline: Date;
+  deadline: string;
 };
 
 type TaskTableProps = {
@@ -66,8 +70,10 @@ export const formatStatus = (status: Status): string => {
       return "To Do";
     case "COMPLETED":
       return "Completed";
+    case "BACKLOG":
+      return "Backlog";
     default:
-      return status;
+      return "Unknown Status";
   }
 };
 
@@ -171,7 +177,7 @@ export function TaskTable({ tasks }: TaskTableProps) {
                         <SelectValue placeholder="Filter by project" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={null}>All Projects</SelectItem>
+                        <SelectItem value="">All Projects</SelectItem>
                         {uniqueProjects.map((project) => (
                           <SelectItem key={project} value={project}>
                             {project}
@@ -190,7 +196,7 @@ export function TaskTable({ tasks }: TaskTableProps) {
                         <SelectValue placeholder="Filter by priority" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={null}>All Priorities</SelectItem>
+                        <SelectItem value="">All Priorities</SelectItem>
                         <SelectItem value="LOW">Low</SelectItem>
                         <SelectItem value="MEDIUM">Medium</SelectItem>
                         <SelectItem value="HIGH">High</SelectItem>
@@ -207,7 +213,7 @@ export function TaskTable({ tasks }: TaskTableProps) {
                         <SelectValue placeholder="Filter by assignee" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={null}>All Assignees</SelectItem>
+                        <SelectItem value="">All Assignees</SelectItem>
                         {uniqueAssignees.map((assignee) => (
                           <SelectItem key={assignee.id} value={assignee.id}>
                             {assignee.name}
@@ -257,7 +263,7 @@ export function TaskTable({ tasks }: TaskTableProps) {
               <SelectValue placeholder="Filter by project" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={null}>All Projects</SelectItem>
+              <SelectItem value="">All Projects</SelectItem>
               {uniqueProjects.map((project) => (
                 <SelectItem key={project} value={project}>
                   {project}
@@ -273,7 +279,7 @@ export function TaskTable({ tasks }: TaskTableProps) {
               <SelectValue placeholder="Filter by priority" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={null}>All Priorities</SelectItem>
+              <SelectItem value="">All Priorities</SelectItem>
               <SelectItem value="LOW">Low</SelectItem>
               <SelectItem value="MEDIUM">Medium</SelectItem>
               <SelectItem value="HIGH">High</SelectItem>
@@ -287,7 +293,7 @@ export function TaskTable({ tasks }: TaskTableProps) {
               <SelectValue placeholder="Filter by assignee" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={null}>All Assignees</SelectItem>
+              <SelectItem value="">All Assignees</SelectItem>
               {uniqueAssignees.map((assignee) => (
                 <SelectItem key={assignee.id} value={assignee.id}>
                   {assignee.name}

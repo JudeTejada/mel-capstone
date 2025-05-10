@@ -24,7 +24,7 @@ import { Label } from "~/components/ui/label";
 import { useState } from "react";
 import { useToast } from "~/components/ui/use-toast";
 import type { User } from "@prisma/client";
-import { RegisterInput } from "~/server/api/routers/auth";
+import type { RegisterInput } from "~/server/api/routers/auth";
 
 export default function MembersPage() {
   console.log("test comment");

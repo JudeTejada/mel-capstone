@@ -23,11 +23,8 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
 import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
-import {
-  UpdateTicketInput,
-  ticketUpdateSchema,
-} from "~/lib/validations/ticket";
-import { Ticket } from "@prisma/client";
+import type { UpdateTicketInput } from "~/lib/validations/ticket";
+import type { Ticket } from "@prisma/client";
 
 type TicketType = "INSTALLATION" | "RECTIFICATION";
 type ProgressStatus = "IN_PROGRESS" | "DONE" | "ON_HOLD";

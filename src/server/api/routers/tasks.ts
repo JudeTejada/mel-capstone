@@ -199,20 +199,23 @@ export const tasksRouter = createTRPCRouter({
       },
     });
 
-    const inProgressCount =
+    const lowCount = Number(
       taskCounts.find((count) => count.priority === Priority.LOW)?._count
-        .priority ?? 0;
-    const mediumCount =
+        .priority ?? 0,
+    );
+    const mediumCount = Number(
       taskCounts.find((count) => count.priority === Priority.MEDIUM)?._count
-        .priority ?? 0;
-    const highCount =
+        .priority ?? 0,
+    );
+    const highCount = Number(
       taskCounts.find((count) => count.priority === Priority.HIGH)?._count
-        .priority ?? 0;
+        .priority ?? 0,
+    );
 
     return {
       status: 201,
       data: {
-        low: inProgressCount,
+        low: lowCount,
         medium: mediumCount,
         high: highCount,
       },
@@ -273,15 +276,18 @@ export const tasksRouter = createTRPCRouter({
       },
     });
 
-    const todoCount =
+    const todoCount = Number(
       taskCounts.find((count) => count.status === Status.TODO)?._count.status ??
-      0;
-    const inProgressCount =
+        0,
+    );
+    const inProgressCount = Number(
       taskCounts.find((count) => count.status === Status.INPROGRESS)?._count
-        .status ?? 0;
-    const completedCount =
+        .status ?? 0,
+    );
+    const completedCount = Number(
       taskCounts.find((count) => count.status === Status.COMPLETED)?._count
-        .status ?? 0;
+        .status ?? 0,
+    );
 
     return {
       status: 200,

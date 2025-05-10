@@ -1,4 +1,4 @@
-import { Ticket } from "@prisma/client";
+import type { Ticket } from "@prisma/client";
 import { TicketCard } from "./TicketCard";
 
 interface TicketListProps {
